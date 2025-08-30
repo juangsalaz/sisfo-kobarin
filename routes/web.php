@@ -21,7 +21,4 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('admin/users', UserController::class)->names('admin.users');
 });
 
-Route::post('/webhooks/fingerspot', [FingerspotWebhookController::class, 'handle'])
-    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]); 
-
 require __DIR__.'/auth.php';
