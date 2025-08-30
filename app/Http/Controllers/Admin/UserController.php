@@ -75,9 +75,12 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('status', 'User diupdate & dikirim ke mesin.');
     }
 
-    public function destroy(User $user) {
+    public function destroy(User $user, FingerspotService $svc) {
         // Hapus lokal. (Untuk hapus di mesin, cek dulu apakah ada endpoint khusus delete di API.)
         $user->delete();
+
+        $res = $svc->deleteUserInfo($user);
+
         return back()->with('status', 'User dihapus (lokal).');
     }
 }

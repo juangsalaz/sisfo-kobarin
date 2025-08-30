@@ -14,8 +14,16 @@ class FingerspotWebhookController extends Controller
     {
         // Payload contoh:
         // {"type":"attlog","cloud_id":"XXXX","data":{"pin":"1","scan":"2020-07-21 10:11","verify":"1","status_scan":"1"}}
+        // Hanya menyimpan ketika user scan jari
 
-        $data = $request->all();
+        $data = $request->validate([
+            'type'             => ['required','in:attlog'],
+            'cloud_id'         => ['required','string'],
+            'data.pin'         => ['required','string'],
+            'data.scan'        => ['required','string'],
+            'data.verify'      => ['nullable','string'],
+            'data.status_scan' => ['nullable','string'],
+        ]);
 
         $pin     = $data['data']['pin'];
         $cloudId = $data['cloud_id'];

@@ -40,4 +40,29 @@ class FingerspotService
 
         return ['ok'=>$ok, 'body'=>$body];
     }
+
+    public function deleteUserInfo(User $user): array
+    {
+        $payload = [
+            'trans_id' => (string) Str::uuid(),
+            'cloud_id' => config('services.fingerspot.cloud_id'),
+            'pin'      => (string) $user->pin,
+        ];
+
+        $resp = Http::asJson()
+            ->withToken(config('services.fingerspot.token'))
+            ->timeout(15)
+            ->post(config('services.fingerspot.endpoint_delete_user'), $payload);
+
+        $ok = $resp->successful();
+        $body = $resp->json() ?? ['raw' => $resp->body()];
+
+        Log::info('Fingerspot delete_userinfo', [
+            'ok'=>$ok,
+            'payload'=>$payload,
+            'response'=>$body
+        ]);
+
+        return ['ok'=>$ok, 'body'=>$body];
+    }
 }
