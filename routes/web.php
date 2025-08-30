@@ -19,6 +19,6 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('admin/users', UserController::class)->names('admin.users');
-});
+}); 
 
 require __DIR__.'/auth.php';
