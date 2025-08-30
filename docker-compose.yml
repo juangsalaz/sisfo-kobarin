@@ -1,0 +1,57 @@
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: kobarin
+    container_name: kobarin-app
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www/kobarin/
+    volumes:
+      - ./:/var/www/kobarin/
+      - ./php/laravel.ini:/usr/local/etc/php/conf.d/laravel.ini
+    networks: 
+      - kobarin-network
+
+  webserver:
+    image: nginx:alpine
+    container_name: kobarin-nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "9008:80"
+    volumes:
+      - ./:/var/www/kobarin/
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - kobarin-network
+
+  db:
+    image: mysql:5.7.32
+    container_name: kobarin-db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3368:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - kobarin-network
+
+networks:
+  kobarin-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
