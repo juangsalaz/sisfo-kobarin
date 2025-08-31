@@ -13,6 +13,18 @@ services:
       - ./php/laravel.ini:/usr/local/etc/php/conf.d/laravel.ini
     networks: 
       - kobarin-network
+  
+  scheduler:
+    image: php:8.3-cli
+    container_name: laravel-scheduler
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - app
+    command: >
+      sh -lc 'while :; do php artisan schedule:run --no-interaction >> storage/logs/scheduler.log 2>&1; sleep 60; done'
+
 
   webserver:
     image: nginx:alpine
