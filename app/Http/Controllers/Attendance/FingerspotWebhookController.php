@@ -12,43 +12,39 @@ class FingerspotWebhookController extends Controller
 {
     public function handle(Request $request)
     {
-        // Payload contoh:
-        // {"type":"attlog","cloud_id":"XXXX","data":{"pin":"1","scan":"2020-07-21 10:11","verify":"1","status_scan":"1"}}
-        // Hanya menyimpan ketika user scan jari
+        $data = $request->all();
 
-        $data = $request->all([
-            'type'             => ['required','in:attlog'],
-            'cloud_id'         => ['required','string'],
-            'data.pin'         => ['required','string'],
-            'data.scan'        => ['required','string'],
-            'data.verify'      => ['nullable','integer'],
-            'data.status_scan' => ['nullable','integer'],
-        ]);
+        if ($data['cloud_id'] == config('services.fingerspot.cloud_id') && $data['type'] == 'attlog') {
+            $pin     = $data['data']['pin'];
+            $cloudId = $data['cloud_id'];
+            $scanStr = $data['data']['scan'];
+            $verify  = $data['data']['verify'] ?? null;
+            $status  = $data['data']['status_scan'] ?? null;
 
-        $pin     = $data['data']['pin'];
-        $cloudId = $data['cloud_id'];
-        $scanStr = $data['data']['scan'];
-        $verify  = $data['data']['verify'] ?? null;
-        $status  = $data['data']['status_scan'] ?? null;
+            // parse ke UTC (asumsi input WIB)
+            $local = Carbon::parse($scanStr, 'Asia/Jakarta');
+            $utc   = $local->clone()->utc();
 
-        // parse ke UTC (asumsi input WIB)
-        $local = Carbon::parse($scanStr, 'Asia/Jakarta');
-        $utc   = $local->clone()->utc();
+            $raw = AttendanceRawEvent::firstOrCreate(
+                ['cloud_id'=>$cloudId,'pin'=>$pin,'event_time'=>$utc],
+                [
+                    'verify'      => $verify,
+                    'status_scan' => $status,
+                    'payload'     => $request->all(),
+                    'received_at' => now(),
+                ]
+            );
 
-        $raw = AttendanceRawEvent::firstOrCreate(
-            ['cloud_id'=>$cloudId,'pin'=>$pin,'event_time'=>$utc],
-            [
-                'verify'      => $verify,
-                'status_scan' => $status,
-                'payload'     => $request->all(),
-                'received_at' => now(),
-            ]
-        );
+            return response()->json([
+                'ok'=>true,
+                'id'=>$raw->id,
+                'ts'=>$utc->toIso8601String()
+            ],200);
+        }
 
         return response()->json([
-            'ok'=>true,
-            'id'=>$raw->id,
-            'ts'=>$utc->toIso8601String()
-        ],200);
+                'ok'=>false,
+                'id'=>0,
+            ], 404); 
     }
 }
