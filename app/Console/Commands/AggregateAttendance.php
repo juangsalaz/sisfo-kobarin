@@ -38,8 +38,6 @@ class AggregateAttendance extends Command
             ? $def->end_time->format('H:i:s')
             : (string) $def->end_time;
 
-        dd($start);
-
         $occ = SesiKegiatan::firstOrCreate(
             ['session_date' => $date, 'weekday' => $def->weekday],
             ['start_at_local'=>$start, 'end_at_local'=>$end]
