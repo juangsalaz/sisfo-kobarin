@@ -37,17 +37,19 @@ class AttendanceNormalizer
             if ($exists) {
                 return null;
             }
+
+            // Buat event baru
+            return Kehadiran::create([
+                'user_id'              => $user->id,
+                'event_time'           => $raw->event_time,
+                'local_time'           => $local,
+                'method'               => $raw->method,
+                'device'               => $raw->device,
+                'raw_id'               => $raw->id,
+                'is_in_session_window' => $isInWindow,
+            ]);
         }
 
-        // Buat event baru
-        return Kehadiran::create([
-            'user_id'              => $user->id,
-            'event_time'           => $raw->event_time,
-            'local_time'           => $local,
-            'method'               => $raw->method,
-            'device'               => $raw->device,
-            'raw_id'               => $raw->id,
-            'is_in_session_window' => $isInWindow,
-        ]);
+        return null;
     }
 }
