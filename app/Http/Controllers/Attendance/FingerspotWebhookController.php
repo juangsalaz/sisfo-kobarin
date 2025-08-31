@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Models\AttendanceRawEvent;
+use App\Services\AttendanceNormalizer;
 
 class FingerspotWebhookController extends Controller
 {
@@ -34,6 +35,9 @@ class FingerspotWebhookController extends Controller
                     'received_at' => now(),
                 ]
             );
+
+            // panggil service normalisasi data
+            app(AttendanceNormalizer::class)->normalizeRaw($raw);
 
             return response()->json([
                 'ok'=>true,
