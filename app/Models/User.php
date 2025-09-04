@@ -22,6 +22,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'is_admin' => 'boolean',
         // Enkripsi transparan kolom sensitif (tetap bisa kirim plaintext ke API saat perlu)
-        'fp_password' => 'encrypted',
+        //'fp_password' => 'encrypted',
     ];
 }
