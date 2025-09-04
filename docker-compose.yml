@@ -17,9 +17,10 @@ services:
   scheduler:
     image: php:8.3-cli
     container_name: laravel-scheduler
-    working_dir: /var/www/html
+    restart: unless-stopped
+    working_dir: /var/www/kobarin
     volumes:
-      - .:/var/www/html
+      - .:/var/www/kobarin
     depends_on:
       - app
     command: >
