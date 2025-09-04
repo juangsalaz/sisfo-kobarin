@@ -30,13 +30,16 @@ class AggregateAttendance extends Command
 
         $def = Kegiatan::where('weekday', $weekday === 'monday' ? 'mon' : 'thu')->firstOrFail();
 
-        $start = $def->start_time instanceof \Carbon\CarbonInterface
+        $startTime = $def->start_time instanceof \Carbon\CarbonInterface
             ? $def->start_time->format('H:i:s')
             : (string) $def->start_time;
 
-        $end = $def->end_time instanceof \Carbon\CarbonInterface
+        $endTime = $def->end_time instanceof \Carbon\CarbonInterface
             ? $def->end_time->format('H:i:s')
             : (string) $def->end_time;
+
+        $start = Carbon::createFromFormat('Y-m-d H:i:s', "{$date} {$startTime}", 'Asia/Jakarta');
+        $end   = Carbon::createFromFormat('Y-m-d H:i:s', "{$date} {$endTime}",   'Asia/Jakarta');
 
         $occ = SesiKegiatan::firstOrCreate(
             ['session_date' => $date, 'weekday' => $def->weekday],
