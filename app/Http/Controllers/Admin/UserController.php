@@ -10,19 +10,36 @@ use App\Jobs\SyncUserToFingerspot;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Services\FingerspotService;
+use Illuminate\Http\Request;
+use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
     public function __construct() {
     }
 
-    public function index() {
-        $users = User::latest()->paginate(10);
+    public function index(Request $request) {
+        $query = \App\Models\User::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('pin', 'like', "%{$search}%");
+            });
+        }
+
+        $users = $query->where('is_admin', 0)->orderBy('name')->paginate(10);
+
         return view('admin.users.index', compact('users'));
     }
 
     public function create() {
-        return view('admin.users.create');
+        $nextPin = \App\Models\User::selectRaw('COALESCE(MAX(CAST(pin AS UNSIGNED)), 0) + 1 AS next_pin')
+            ->value('next_pin');
+
+        return view('admin.users.create', compact('nextPin'));
     }
 
     public function store(UserStoreRequest $request, FingerspotService $svc) {
@@ -51,28 +68,26 @@ class UserController extends Controller
             ->with('status', 'User dibuat & dikirim ke mesin: '.($res['ok']?'OK':'Gagal'));
     }
 
-    public function edit(User $user) {
+    public function edit(User $user)
+    {
         return view('admin.users.edit', compact('user'));
     }
 
-    public function update(UserUpdateRequest $request, User $user) {
+    public function update(UpdateUserRequest $request, User $user, FingerspotService $svc)
+    {
         $data = $request->validated();
-        if (!empty($data['password'])) {
-            $user->password = Hash::make($data['password']);
-        }
+
+        // field yang boleh diupdate
         $user->fill([
             'name'        => $data['name'],
-            'email'       => $data['email'],
+            'no_hp'       => $data['no_hp'] ?? null,
+            'is_admin'    => $data['is_admin'] ?? false,
             'pin'         => $data['pin'],
-            'privilege'   => $data['privilege'],
-            'fp_password' => $data['fp_password'] ?? null,
-            'rfid'        => $data['rfid'] ?? null,
-            'fp_template' => $data['fp_template'] ?? null,
         ])->save();
 
-        SyncUserToFingerspot::dispatch($user);
-
-        return redirect()->route('admin.users.index')->with('status', 'User diupdate & dikirim ke mesin.');
+        return redirect()
+            ->route('admin.users.index')
+            ->with('status', 'Data user berhasil diperbarui'.(!empty($data['resync']) ? ' & disinkron ke mesin.' : '.'));
     }
 
     public function destroy(User $user, FingerspotService $svc) {
