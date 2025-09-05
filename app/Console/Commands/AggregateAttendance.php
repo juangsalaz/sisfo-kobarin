@@ -63,13 +63,14 @@ class AggregateAttendance extends Command
                 ->first();
 
             if ($firstEvent) {
-                $checkIn  = $firstEvent->local_time->copy(); // WIB (dari casts)
-                $graceEnd = (clone $start)->addMinutes((int) $def->grace_in_minutes);
+                $checkIn  = $firstEvent->local_time instanceof \Carbon\Carbon
+                    ? $firstEvent->local_time->copy()                   // sudah WIB dari casts
+                    : \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', (string) $firstEvent->local_time, 'Asia/Jakarta');
 
-                // telat dalam menit (integer, non-negatif)
-                $late = $checkIn->greaterThan($graceEnd)
-                    ? $graceEnd->diffInMinutes($checkIn)
-                    : 0;
+                $graceEnd = (clone $start)->addMinutes((int) $def->grace_in_minutes); // $start sudah WIB
+
+                // Telat = selisih (checkIn - graceEnd) dalam menit, bertanda. Negatif -> 0.
+                $late = max(0, $checkIn->diffInMinutes($graceEnd, false));
 
                 $status = $late > 0 ? 'terlambat' : 'hadir';
             }
