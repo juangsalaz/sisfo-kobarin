@@ -59,7 +59,7 @@ class AggregateAttendance extends Command
                 $late   = 0;
                 $checkIn= null;
             } else {
-                $checkIn = Carbon::parse($firstEvent->local_time)->timezone('Asia/Jakarta');
+                $checkIn = $firstEvent->local_time->copy();
                 $graceEnd = (clone $start)->addMinutes((int) $def->grace_in_minutes);
                 $late = $checkIn->greaterThan($graceEnd)
                     ? $graceEnd->diffInMinutes($checkIn)   // urutan benar: graceEnd → checkIn

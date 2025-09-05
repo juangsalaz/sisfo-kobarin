@@ -23,6 +23,7 @@ class Kegiatan extends Model
         'start_time' => 'string',
         'end_time'   => 'string',
         'grace_in_minutes' => 'integer',
+        'check_in' => 'datetime'
     ];
 
     /**
