@@ -59,11 +59,12 @@ class AggregateAttendance extends Command
                 $late   = 0;
                 $checkIn= null;
             } else {
-                $checkIn = $firstEvent->local_time;
-                $graceEnd = (clone $start)->addMinutes($def->grace_in_minutes);
-                $late = $checkIn->greaterThan($graceEnd) 
-                    ? $checkIn->diffInMinutes($graceEnd) 
+                $checkIn = Carbon::parse($firstEvent->local_time)->timezone('Asia/Jakarta');
+                $graceEnd = (clone $start)->addMinutes((int) $def->grace_in_minutes);
+                $late = $checkIn->greaterThan($graceEnd)
+                    ? $graceEnd->diffInMinutes($checkIn)   // urutan benar: graceEnd → checkIn
                     : 0;
+
                 $status = $late > 0 ? 'terlambat' : 'hadir';
             }
 
