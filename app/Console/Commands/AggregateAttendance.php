@@ -63,21 +63,23 @@ class AggregateAttendance extends Command
                 ->first();
 
             if ($firstEvent) {
-                $checkIn  = $firstEvent->local_time instanceof \Carbon\Carbon
-                    ? $firstEvent->local_time->copy()                   // sudah WIB dari casts
-                    : \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', (string) $firstEvent->local_time, 'Asia/Jakarta');
+                $checkInStr  = $firstEvent->local_time; // '2025-09-04 19:58:32'
+                $graceEndStr = $start->copy()->addMinutes((int)$def->grace_in_minutes)->format('Y-m-d H:i:s');
 
-                $graceEnd = (clone $start)->addMinutes((int) $def->grace_in_minutes); // $start sudah WIB
+                // Ubah ke UNIX timestamp (detik sejak epoch)
+                $checkInTs  = strtotime($checkInStr);
+                $graceEndTs = strtotime($graceEndStr);
 
-                // Telat = selisih (checkIn - graceEnd) dalam menit, bertanda. Negatif -> 0.
-                $late = max(0, $checkIn->diffInMinutes($graceEnd, false));
+                // Selisih dalam menit
+                $diffSeconds = $checkInTs - $graceEndTs;
+                $late = $diffSeconds > 0 ? floor($diffSeconds / 60) : 0;
 
                 $status = $late > 0 ? 'terlambat' : 'hadir';
             }
 
             SesiKegiatanDetail::updateOrCreate(
                 ['sesi_kegiatan_id'=>$occ->id, 'user_id'=>$u->id],
-                ['check_in'=>$checkIn, 'late_minutes'=>(int)$late, 'status'=>$status]
+                ['check_in'=>$checkInStr, 'late_minutes'=>(int)$late, 'status'=>$status]
             );
         }
 
