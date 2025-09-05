@@ -18,7 +18,7 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
             <div>
                 <a href="/">
-                    <img src="{{ asset('build/assets/sisfo_kobar.png') }}" width="200">
+                    <img src="{{ asset('assets/images/sisfo_kobar.png') }}" width="200">
                 </a>
             </div>
 
