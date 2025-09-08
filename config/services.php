@@ -43,4 +43,10 @@ return [
         'tz'       => env('FINGERSPOT_TZ', 'Asia/Jakarta'),
     ],
 
+    'group_api' => [
+        'base_url'  => env('GROUP_API_BASE_URL', 'http://127.0.0.1:3001'),
+        'api_key'   => env('GROUP_API_KEY'),
+        'group'     => env('GROUP_DEFAULT_GROUP', 'PENGURUS KELOMPOK'),
+    ],
+
 ];

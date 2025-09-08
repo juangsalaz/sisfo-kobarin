@@ -18,3 +18,14 @@ Schedule::command('attendance:aggregate')
     ->dailyAt('21:20')
     ->timezone('Asia/Jakarta');
 
+Schedule::command('attendance:send-recap')
+    ->mondays()
+    ->dailyAt('21:45')
+    ->timezone('Asia/Jakarta');
+
+Schedule::command('attendance:send-recap')
+    ->thursdays()
+    ->dailyAt('21:45')
+    ->timezone('Asia/Jakarta');
+
+

@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Attendance\FingerspotWebhookController;
+use App\Services\GroupNotifier;
+use Illuminate\Http\Request;
 
 Route::get('/', fn() => view('welcome'));
 
@@ -20,5 +22,13 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::resource('admin/users', UserController::class)->names('admin.users');
 }); 
+
+
+Route::post('/admin/attendance/send-recap', function(Request $req, GroupNotifier $notifier) {
+    $date = $req->input('date', now('Asia/Jakarta')->toDateString());
+    $group= $req->input('group');
+    $res  = $notifier->recapAndSend($date, $group);
+    return back()->with('status', $res['ok'] ? 'Rekap terkirim' : 'Gagal kirim: '.json_encode($res['body']));
+})->middleware('auth');
 
 require __DIR__.'/auth.php';
