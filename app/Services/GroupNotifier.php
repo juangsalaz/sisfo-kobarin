@@ -21,6 +21,9 @@ class GroupNotifier
         // ambil semua detail + user
         $details = SesiKegiatanDetail::with('user')
             ->where('sesi_kegiatan_id', $occ->id)
+            ->whereHas('user', function ($q) {
+                $q->where('is_admin', 0);
+            })
             ->get();
 
         $countTepat = $details->where('status', 'hadir')->count();
@@ -39,10 +42,10 @@ class GroupNotifier
         $jam   = Carbon::parse($occ->start_at_local)->format('H:i') . ' - ' . Carbon::parse($occ->end_at_local)->format('H:i');
 
         $lines = [];
-        $lines[] = "Rekap Kehadiran Pengajian {$hari}, {$tgl} ({$jam})";
+        $lines[] = "Rekap Kehadiran Sambung Kelompok {$hari}, {$tgl} ({$jam})";
         $lines[] = "• Hadir: {$countHadir}";
-        $lines[] = "   └ Tepat waktu: {$countTepat}";
-        $lines[] = "   └ Terlambat: {$countTelat}";
+        $lines[] = "   └ Tepat waktu (19:45 - 20:00): {$countTepat}";
+        $lines[] = "   └ Terlambat (di atas 20:00): {$countTelat}";
         $lines[] = "• Tidak hadir: {$countTidak}";
         if ($countTidak > 0) {
             $lines[] = "";
