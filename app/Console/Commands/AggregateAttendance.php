@@ -56,6 +56,7 @@ class AggregateAttendance extends Command
             $status  = 'tidak_hadir';
             $late    = 0;
             $checkIn = null;
+            $checkInStr = null;
 
             $firstEvent = Kehadiran::where('user_id', $u->id)
                 ->whereBetween('local_time', [$start, $end])
@@ -75,12 +76,12 @@ class AggregateAttendance extends Command
                 $late = $diffSeconds > 0 ? floor($diffSeconds / 60) : 0;
 
                 $status = $late > 0 ? 'terlambat' : 'hadir';
-
-                SesiKegiatanDetail::updateOrCreate(
-                    ['sesi_kegiatan_id'=>$occ->id, 'user_id'=>$u->id],
-                    ['check_in'=>$checkInStr, 'late_minutes'=>(int)$late, 'status'=>$status]
-                );
             }
+
+            SesiKegiatanDetail::updateOrCreate(
+                ['sesi_kegiatan_id'=>$occ->id, 'user_id'=>$u->id],
+                ['check_in'=>$checkInStr, 'late_minutes'=>(int)$late, 'status'=>$status]
+            );
         }
 
         $this->info("Rekap kehadiran untuk $date berhasil dihitung.");
