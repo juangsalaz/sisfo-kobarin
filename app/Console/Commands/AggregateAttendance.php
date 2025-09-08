@@ -62,6 +62,7 @@ class AggregateAttendance extends Command
                 ->orderBy('local_time','asc')
                 ->first();
 
+            $checkInStr = '';
             if ($firstEvent) {
                 $checkInStr  = $firstEvent->local_time; // '2025-09-04 19:58:32'
                 $graceEndStr = $start->copy()->addMinutes((int)$def->grace_in_minutes)->format('Y-m-d H:i:s');
