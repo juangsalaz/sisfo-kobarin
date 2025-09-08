@@ -62,7 +62,6 @@ class AggregateAttendance extends Command
                 ->orderBy('local_time','asc')
                 ->first();
 
-            $checkInStr = '';
             if ($firstEvent) {
                 $checkInStr  = $firstEvent->local_time; // '2025-09-04 19:58:32'
                 $graceEndStr = $start->copy()->addMinutes((int)$def->grace_in_minutes)->format('Y-m-d H:i:s');
@@ -76,12 +75,12 @@ class AggregateAttendance extends Command
                 $late = $diffSeconds > 0 ? floor($diffSeconds / 60) : 0;
 
                 $status = $late > 0 ? 'terlambat' : 'hadir';
-            }
 
-            SesiKegiatanDetail::updateOrCreate(
-                ['sesi_kegiatan_id'=>$occ->id, 'user_id'=>$u->id],
-                ['check_in'=>$checkInStr, 'late_minutes'=>(int)$late, 'status'=>$status]
-            );
+                SesiKegiatanDetail::updateOrCreate(
+                    ['sesi_kegiatan_id'=>$occ->id, 'user_id'=>$u->id],
+                    ['check_in'=>$checkInStr, 'late_minutes'=>(int)$late, 'status'=>$status]
+                );
+            }
         }
 
         $this->info("Rekap kehadiran untuk $date berhasil dihitung.");
