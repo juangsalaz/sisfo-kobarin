@@ -30,8 +30,15 @@ class GroupNotifier
         $countTelat = $details->where('status', 'terlambat')->count();
         $countHadir = $countTepat + $countTelat;
         $countTidak = $details->where('status', 'tidak_hadir')->count();
+        $countIzin = $details->where('status', 'izin')->count();
 
         $absentNames = $details->where('status', 'tidak_hadir')
+            ->pluck('user.name')
+            ->filter()
+            ->values()
+            ->all();
+
+        $izinNames = $details->where('status', 'izin')
             ->pluck('user.name')
             ->filter()
             ->values()
@@ -46,7 +53,17 @@ class GroupNotifier
         $lines[] = "• Hadir: {$countHadir}";
         $lines[] = "   └ Tepat waktu (19:45 - 20:00): {$countTepat}";
         $lines[] = "   └ Terlambat (di atas 20:00): {$countTelat}";
+        $lines[] = "• Izin: {$countIzin}";
         $lines[] = "• Tidak hadir: {$countTidak}";
+        
+        if ($countIzin > 0) {
+            $lines[] = "";
+            $lines[] = "Izin:";
+            foreach ($izinNames as $n) {
+                $lines[] = "- {$n}";
+            }
+        }
+
         if ($countTidak > 0) {
             $lines[] = "";
             $lines[] = "Tidak hadir:";
