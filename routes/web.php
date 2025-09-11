@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\KehadiranController;
 use App\Http\Controllers\Attendance\FingerspotWebhookController;
 use App\Services\GroupNotifier;
 use Illuminate\Http\Request;
@@ -21,6 +22,11 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('admin/users', UserController::class)->names('admin.users');
+    
+    Route::get('admin/kehadiran', [KehadiranController::class, 'index'])
+        ->name('kehadiran.index');
+    Route::get('admin/kehadiran/create', [KehadiranController::class, 'create'])
+        ->name('kehadiran.create');
 }); 
 
 
