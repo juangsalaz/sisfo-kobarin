@@ -1,3 +1,21 @@
+<style>
+    .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 9999px; /* pill shape */
+        color: #fff;
+    }
+    .badge-yellow {
+        background-color: #facc15; /* kuning */
+        color: #854d0e;
+    }
+    .badge-green {
+        background-color: #22c55e; /* hijau */
+        color: #14532d;
+    }
+</style>
 <x-app-layout>
     <x-slot name="header"><h2 class="font-semibold text-xl">Lihat Kehadiran</h2></x-slot>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white shadow" style="margin-top: 30px; padding: 30px;">
@@ -35,7 +53,13 @@
                     <tr class="border-b">
                         <td class="py-2 pr-4">{{ $row->user->name ?? '—' }}</td>
                         <td class="py-2 pr-4">{{ \Illuminate\Support\Carbon::parse($row->local_time)->format('Y-m-d H:i:s') }}</td>
-                        <td class="py-2">{{ $row->is_izin ? 'Ya' : 'Tidak' }}</td>
+                        <td class="py-2">
+                            @if($row->is_izin)
+                                <span class="badge badge-yellow">Ya</span>
+                            @else
+                                <span class="badge badge-green">Tidak</span>
+                            @endif
+                        </td>
                         <td class="py-2 pr-4">
                             <form action="{{ route('kehadiran.destroy', $row->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?')">
                                 @csrf
