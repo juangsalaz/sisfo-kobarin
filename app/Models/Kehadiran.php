@@ -19,6 +19,7 @@ class Kehadiran extends Model
         'device',
         'raw_id',
         'is_in_session_window',
+        'is_izin',
     ];
 
     protected $casts = [

@@ -21,28 +21,30 @@
         @endif
 
         <div class="mt-6 overflow-x-auto">
-            <table class="min-w-full text-sm">
+            <table class="min-w-full text-sm" style="width: 100%;">
                 <thead>
                 <tr class="border-b">
                     <th class="text-left py-2 pr-4">User</th>
-                    <th class="text-left py-2 pr-4">Local Time</th>
-                    <th class="text-left py-2 pr-4">Event Time (UTC)</th>
-                    <th class="text-left py-2 pr-4">Method</th>
-                    <th class="text-left py-2 pr-4">Device</th>
-                    <th class="text-left py-2 pr-4">In Session?</th>
+                    <th class="text-left py-2 pr-4">Jam Absen</th>
                     <th class="text-left py-2">Izin?</th>
+                    <th class="text-left py-2">Aksi</th>
                 </tr>
                 </thead>
                 <tbody>
                 @forelse($kehadiran as $row)
-                    <tr class="border-b">
-                    <td class="py-2 pr-4">{{ $row->user->name ?? '—' }}</td>
-                    <td class="py-2 pr-4">{{ \Illuminate\Support\Carbon::parse($row->local_time)->format('Y-m-d H:i:s') }}</td>
-                    <td class="py-2 pr-4">{{ \Illuminate\Support\Carbon::parse($row->event_time)->format('Y-m-d H:i:s') }}</td>
-                    <td class="py-2 pr-4">{{ $row->method ?? '—' }}</td>
-                    <td class="py-2 pr-4">{{ $row->device ?? '—' }}</td>
-                    <td class="py-2 pr-4">{{ $row->is_in_session_window ? 'Ya' : 'Tidak' }}</td>
-                    <td class="py-2">{{ $row->is_izin ? 'Ya' : 'Tidak' }}</td>
+                    <tr class="border-b" style="text-align: center;">
+                        <td class="py-2 pr-4">{{ $row->user->name ?? '—' }}</td>
+                        <td class="py-2 pr-4">{{ \Illuminate\Support\Carbon::parse($row->local_time)->format('Y-m-d H:i:s') }}</td>
+                        <td class="py-2">{{ $row->is_izin ? 'Ya' : 'Tidak' }}</td>
+                        <td class="py-2 pr-4">
+                            <form action="{{ route('kehadiran.destroy', $row->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">
+                                    Hapus
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 @empty
                     <tr>

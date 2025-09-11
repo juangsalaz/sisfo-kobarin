@@ -27,6 +27,10 @@ Route::middleware(['auth'])->group(function () {
         ->name('kehadiran.index');
     Route::get('admin/kehadiran/create', [KehadiranController::class, 'create'])
         ->name('kehadiran.create');
+    Route::post('admin/kehadiran', [KehadiranController::class, 'store'])->name('kehadiran.store');
+    Route::delete('/kehadiran/{id}', [KehadiranController::class, 'destroy'])
+        ->name('kehadiran.destroy');
+
 }); 
 
 
