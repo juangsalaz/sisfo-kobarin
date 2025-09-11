@@ -76,6 +76,10 @@ class AggregateAttendance extends Command
                 $late = $diffSeconds > 0 ? floor($diffSeconds / 60) : 0;
 
                 $status = $late > 0 ? 'terlambat' : 'hadir';
+                if ($firstEvent->is_izin) {
+                    $status = 'izin';
+                }
+                
             }
 
             SesiKegiatanDetail::updateOrCreate(

@@ -72,7 +72,7 @@ class KehadiranController extends Controller
             'method'      => '',
             'device'      => '',
             'raw_id'      => 0,          // isi default 0 atau sesuai kebutuhan
-            'is_in_session_window' => 0,
+            'is_in_session_window' => 1,
             'is_izin'     => $validated['is_izin'] ?? 0,
         ]);
 
