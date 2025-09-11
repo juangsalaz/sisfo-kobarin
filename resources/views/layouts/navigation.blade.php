@@ -19,6 +19,10 @@
                     <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
                         Pengaturan User
                     </x-nav-link>
+
+                    <x-nav-link :href="route('kehadiran.index')" :active="request()->routeIs('kehadiran.index')">
+                        Rekap Kehadiran
+                    </x-nav-link>
                 </div>
             </div>
 

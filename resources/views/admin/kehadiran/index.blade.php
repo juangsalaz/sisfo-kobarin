@@ -17,7 +17,7 @@
     }
 </style>
 <x-app-layout>
-    <x-slot name="header"><h2 class="font-semibold text-xl">Lihat Kehadiran</h2></x-slot>
+    <x-slot name="header"><h2 class="font-semibold text-xl">Rekap Kehadiran</h2></x-slot>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white shadow" style="margin-top: 30px; padding: 30px;">
         <div>
             <label for="tanggal-kegiatan">Tanggal Kegiatan</label>
