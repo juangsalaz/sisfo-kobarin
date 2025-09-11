@@ -32,7 +32,7 @@
                 </thead>
                 <tbody>
                 @forelse($kehadiran as $row)
-                    <tr class="border-b" style="text-align: center;">
+                    <tr class="border-b">
                         <td class="py-2 pr-4">{{ $row->user->name ?? '—' }}</td>
                         <td class="py-2 pr-4">{{ \Illuminate\Support\Carbon::parse($row->local_time)->format('Y-m-d H:i:s') }}</td>
                         <td class="py-2">{{ $row->is_izin ? 'Ya' : 'Tidak' }}</td>

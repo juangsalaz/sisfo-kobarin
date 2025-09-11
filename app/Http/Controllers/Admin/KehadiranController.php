@@ -60,15 +60,10 @@ class KehadiranController extends Controller
             'tanggal' => 'required',
         ]);
 
-        // Waktu submit sekarang
-        // $event_time = now();
-        // $local_time = Carbon::now('Asia/Jakarta');
+        $tanggal = \Carbon\Carbon::parse($validated['tanggal'], 'Asia/Jakarta')
+            ->setTime(19, 45, 0);
 
-        $tanggal = Carbon::parse($validated['tanggal'], 'Asia/Jakarta')->startOfDay();
-        $jamSekarang = now('Asia/Jakarta')->format('H:i:s');
-
-        // Gabungkan tanggal dari input + jam sekarang
-        $waktu = Carbon::parse($tanggal->toDateString() . ' ' . $jamSekarang, 'Asia/Jakarta');
+        $waktu = $tanggal;
 
         Kehadiran::create([
             'user_id'     => $validated['user_id'],
