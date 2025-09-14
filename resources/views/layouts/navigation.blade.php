@@ -92,6 +92,14 @@
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
 
+                <x-responsive-nav-link :href="route('admin.users.index')">
+                   Pengaturan User
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('kehadiran.index')">
+                   Rekap Kehadiran
+                </x-responsive-nav-link>
+
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
