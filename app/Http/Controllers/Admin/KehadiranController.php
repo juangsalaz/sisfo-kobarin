@@ -65,17 +65,23 @@ class KehadiranController extends Controller
 
         $waktu = $tanggal;
 
-        Kehadiran::create([
-            'user_id'     => $validated['user_id'],
-            'event_time'  => $waktu,       // UTC time atau sesuai server
-            'local_time'  => $waktu,       // waktu lokal saat submit
-            'method'      => '',
-            'device'      => '',
-            'raw_id'      => 0,          // isi default 0 atau sesuai kebutuhan
-            'is_in_session_window' => 1,
-            'is_izin'     => $validated['is_izin'] ?? 0,
-        ]);
+        $exists = Kehadiran::where('user_id', $validated['user_id'])
+            ->whereDate('local_time', $validated['tanggal'])
+            ->exists();
 
+        if (!$exists) {
+            Kehadiran::create([
+                'user_id'     => $validated['user_id'],
+                'event_time'  => $waktu,       // UTC time atau sesuai server
+                'local_time'  => $waktu,       // waktu lokal saat submit
+                'method'      => '',
+                'device'      => '',
+                'raw_id'      => 0,          // isi default 0 atau sesuai kebutuhan
+                'is_in_session_window' => 1,
+                'is_izin'     => $validated['is_izin'] ?? 0,
+            ]);
+        }
+        
         return redirect()->route('kehadiran.index')->with('success', 'Data kehadiran berhasil ditambahkan.');
     }
 
