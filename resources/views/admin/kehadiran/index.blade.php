@@ -42,6 +42,7 @@
             <table class="min-w-full text-sm" style="width: 100%;">
                 <thead>
                 <tr class="border-b">
+                    <th class="text-left py-2 pr-4">No</th>
                     <th class="text-left py-2 pr-4">User</th>
                     <th class="text-left py-2 pr-4">Jam Absen</th>
                     <th class="text-left py-2">Izin?</th>
@@ -51,6 +52,7 @@
                 <tbody>
                 @forelse($kehadiran as $row)
                     <tr class="border-b">
+                        <td class="py-2 pr-4">{{ $loop->iteration }}</td>
                         <td class="py-2 pr-4">{{ $row->user->name ?? '—' }}</td>
                         <td class="py-2 pr-4">{{ \Illuminate\Support\Carbon::parse($row->local_time)->format('Y-m-d H:i:s') }}</td>
                         <td class="py-2">
