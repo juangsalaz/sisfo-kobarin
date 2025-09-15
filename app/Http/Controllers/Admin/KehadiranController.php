@@ -30,9 +30,9 @@ class KehadiranController extends Controller
             $query->whereDate('local_time', $tanggal);
         } else {
             // kalau ingin kosong sebelum search, pakai whereRaw('1=0')
-            $query->whereRaw('1=0');
+            //$query->whereRaw('1=0');
             // atau: default ke hari ini
-            // $query->whereDate('local_time', now()->toDateString());
+            $query->whereDate('local_time', now()->toDateString());
         }
 
         // pagination + keep query string
