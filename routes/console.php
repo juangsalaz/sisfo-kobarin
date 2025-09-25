@@ -28,4 +28,8 @@ Schedule::command('attendance:send-recap')
     ->dailyAt('21:45')
     ->timezone('Asia/Jakarta');
 
+Schedule::command('wa:send-personal')
+    ->dailyAt('21:46')
+    ->timezone('Asia/Jakarta');
+
 

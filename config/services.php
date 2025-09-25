@@ -47,6 +47,7 @@ return [
         'base_url'  => env('GROUP_API_BASE_URL', 'http://127.0.0.1:3001'),
         'api_key'   => env('GROUP_API_KEY'),
         'group'     => env('GROUP_DEFAULT_GROUP', 'PENGURUS KELOMPOK'),
+        'personal_path' => env('WA_PERSONAL_PATH','/send-personal'),
     ],
 
 ];
