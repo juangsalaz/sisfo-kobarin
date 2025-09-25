@@ -50,4 +50,10 @@ return [
         'personal_path' => env('WA_PERSONAL_PATH','/send-personal'),
     ],
 
+    'wa' => [
+        'base_url'  => env('WA_BASE_URL'),
+        'api_key'   => env('WA_API_KEY'),
+        'personal_path' => env('WA_PERSONAL_PATH','/send-personal'),
+    ],
+
 ];
