@@ -95,7 +95,7 @@ class GroupNotifier
         if ($countTidak > 0) {
             $lines[] = "";
             $lines[] = "Tidak hadir (Perempuan):";
-            foreach ($izinNamesPerempuan as $n) {
+            foreach ($absentNamesPerempuan as $n) {
                 $lines[] = "- Ibu {$n}";
             }
         }
