@@ -32,13 +32,25 @@ class GroupNotifier
         $countTidak = $details->where('status', 'tidak_hadir')->count();
         $countIzin = $details->where('status', 'izin')->count();
 
-        $absentNames = $details->where('status', 'tidak_hadir')
+        $absentNamesLaki = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 1)
             ->pluck('user.name')
             ->filter()
             ->values()
             ->all();
 
-        $izinNames = $details->where('status', 'izin')
+        $absentNamesPerempuan = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 2)
+            ->pluck('user.name')
+            ->filter()
+            ->values()
+            ->all();
+
+        $izinNamesLaki = $details->where('status', 'izin')->where('user.jenis_kelamin', 1)
+            ->pluck('user.name')
+            ->filter()
+            ->values()
+            ->all();
+
+        $izinNamesPerempuan = $details->where('status', 'izin')->where('user.jenis_kelamin', 2)
             ->pluck('user.name')
             ->filter()
             ->values()
@@ -58,17 +70,33 @@ class GroupNotifier
         
         if ($countIzin > 0) {
             $lines[] = "";
-            $lines[] = "Izin:";
-            foreach ($izinNames as $n) {
-                $lines[] = "- {$n}";
+            $lines[] = "Izin (Laki-laki):";
+            foreach ($izinNamesLaki as $n) {
+                $lines[] = "- Bpk. {$n}";
+            }
+        }
+
+        if ($countIzin > 0) {
+            $lines[] = "";
+            $lines[] = "Izin (Perempuan):";
+            foreach ($izinNamesPerempuan as $n) {
+                $lines[] = "- Ibu {$n}";
             }
         }
 
         if ($countTidak > 0) {
             $lines[] = "";
-            $lines[] = "Tidak hadir:";
-            foreach ($absentNames as $n) {
-                $lines[] = "- {$n}";
+            $lines[] = "Tidak hadir (Laki-laki):";
+            foreach ($absentNamesLaki as $n) {
+                $lines[] = "- Bpk. {$n}";
+            }
+        }
+
+        if ($countTidak > 0) {
+            $lines[] = "";
+            $lines[] = "Tidak hadir (Perempuan):";
+            foreach ($izinNamesPerempuan as $n) {
+                $lines[] = "- Ibu {$n}";
             }
         }
 

@@ -42,7 +42,7 @@ class SendPersonalWA extends Command
             return Command::SUCCESS;
         }
 
-        $text = "Assalamualaikum, Ngapunten, dalu niki kok mboten ketingal ngaji sambung, sakit nopo wonten urusan?";
+        $text = "Assalamualaikum, Ngapunten, dalu niki kok mboten ketingal ngaji sambung, sakit nopo wonten urusan? 🙏🏼";
 
         $res = $wa->sendPersonal($absents, $text);
 
