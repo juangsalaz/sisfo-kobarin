@@ -40,6 +40,7 @@ return [
         'endpoint_delete_user' => env('FINGERSPOT_ENDPOINT_DELETE_USER'),
         'token'    => env('FINGERSPOT_TOKEN'),
         'cloud_id' => env('FINGERSPOT_CLOUD_ID'),
+        'cloud_id2' => env('FINGERSPOT2_CLOUD_ID'),
         'tz'       => env('FINGERSPOT_TZ', 'Asia/Jakarta'),
     ],
 

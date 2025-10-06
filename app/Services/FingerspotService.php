@@ -13,7 +13,7 @@ class FingerspotService
     {
         $payload = [
             'trans_id' => (string) Str::uuid(),
-            'cloud_id' => config('services.fingerspot.cloud_id'),
+            'cloud_id' => config('services.fingerspot.cloud2_id'),
             'data' => [
                 'pin'       => (string) $user->pin,
                 'name'      => (string) $user->name,
