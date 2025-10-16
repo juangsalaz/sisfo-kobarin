@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Models\Kehadiran;
 use Carbon\Carbon;
+use App\Models\Kegiatan;
 
 class AttendanceNormalizer
 {
@@ -19,7 +20,21 @@ class AttendanceNormalizer
 
         // Cek apakah hari Senin / Kamis, jam 19:30–21:30
         $weekday = strtolower($local->englishDayOfWeek); 
-        $isPengajian = in_array($weekday, ['monday','thursday','friday']);
+        //$isPengajian = in_array($weekday, ['monday','thursday','friday']);
+
+        $map = [
+            'monday' => 'mon',
+            'thursday' => 'thu',
+            'friday' => 'fri',
+        ];
+
+        $def = Kegiatan::whereIn('weekday', [$map[$weekday] ?? 'mon'])->firstOrFail();
+
+        $isPengajian = true;
+        if ($def->is_libur) {
+            $isPengajian = false;
+        }
+
         $isInWindow = false;
         $start = null; $end = null;
 

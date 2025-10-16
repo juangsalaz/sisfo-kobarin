@@ -33,9 +33,7 @@ class AggregateAttendance extends Command
             'friday' => 'fri',
         ];
 
-        $def = Kegiatan::whereIn('weekday', [$map[$weekday] ?? 'mon'])
-            ->where('is_libur', false)
-            ->firstOrFail();
+        $def = Kegiatan::whereIn('weekday', [$map[$weekday] ?? 'mon'])->firstOrFail();
 
         if ($def->is_libur) {
             $this->info("Pengajian pada tanggal $date diliburkan.");
