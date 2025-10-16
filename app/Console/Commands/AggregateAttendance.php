@@ -22,12 +22,25 @@ class AggregateAttendance extends Command
             : now('Asia/Jakarta')->toDateString();
 
         $weekday = strtolower(Carbon::parse($date, 'Asia/Jakarta')->englishDayOfWeek);
-        if (!in_array($weekday, ['monday','thursday'])) {
+        if (!in_array($weekday, ['monday','thursday','friday'])) {
             $this->info("Tanggal $date bukan hari pengajian.");
             return Command::SUCCESS;
         }
 
-        $def = Kegiatan::where('weekday', $weekday === 'monday' ? 'mon' : 'thu')->firstOrFail();
+        $map = [
+            'monday' => 'mon',
+            'thursday' => 'thu',
+            'friday' => 'fri',
+        ];
+
+        $def = Kegiatan::whereIn('weekday', [$map[$weekday] ?? 'mon'])
+            ->where('is_libur', false)
+            ->firstOrFail();
+
+        if ($def->is_libur) {
+            $this->info("Pengajian pada tanggal $date diliburkan.");
+            return Command::SUCCESS;
+        }
 
         // Pastikan TIME dibaca sebagai string HH:ii:ss
         $startTime = $def->start_time instanceof \Carbon\CarbonInterface

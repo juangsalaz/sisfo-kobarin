@@ -19,7 +19,7 @@ class AttendanceNormalizer
 
         // Cek apakah hari Senin / Kamis, jam 19:30–21:30
         $weekday = strtolower($local->englishDayOfWeek); 
-        $isPengajian = in_array($weekday, ['monday','thursday']);
+        $isPengajian = in_array($weekday, ['monday','thursday','friday']);
         $isInWindow = false;
         $start = null; $end = null;
 
