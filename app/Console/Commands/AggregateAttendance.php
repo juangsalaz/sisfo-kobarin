@@ -56,7 +56,7 @@ class AggregateAttendance extends Command
         }
 
         $occ = SesiKegiatan::firstOrCreate(
-            ['session_date' => $date, 'weekday' => $def->weekday],
+            ['session_date' => $date, 'weekday' => (string)$def->weekday],
             ['start_at_local'=>$start, 'end_at_local'=>$end]
         );
 
