@@ -37,7 +37,7 @@
                     </thead>
                     <tbody>
                         @forelse($rekap as $i => $r)
-                            <tr class="border-b">
+                            <tr class="border-b" style="height: 50px;">
                                 <td style="text-align: center;">{{ $i + 1 }}</td>
                                 <td style="text-align: center;">
                                     {{ strtoupper($r->weekday) }} /
