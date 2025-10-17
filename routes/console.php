@@ -18,6 +18,11 @@ Schedule::command('attendance:aggregate')
     ->dailyAt('21:20')
     ->timezone('Asia/Jakarta');
 
+Schedule::command('attendance:aggregate')
+    ->fridays()
+    ->dailyAt('21:20')
+    ->timezone('Asia/Jakarta');
+
 Schedule::command('attendance:send-recap')
     ->mondays()
     ->dailyAt('21:45')
@@ -25,6 +30,11 @@ Schedule::command('attendance:send-recap')
 
 Schedule::command('attendance:send-recap')
     ->thursdays()
+    ->dailyAt('21:45')
+    ->timezone('Asia/Jakarta');
+
+Schedule::command('attendance:send-recap')
+    ->fridays()
     ->dailyAt('21:45')
     ->timezone('Asia/Jakarta');
 
@@ -35,6 +45,11 @@ Schedule::command('wa:send-personal')
 
 Schedule::command('wa:send-personal')
     ->thursdays()
+    ->dailyAt('21:46')
+    ->timezone('Asia/Jakarta');
+
+Schedule::command('wa:send-personal')
+    ->fridays()
     ->dailyAt('21:46')
     ->timezone('Asia/Jakarta');
 
