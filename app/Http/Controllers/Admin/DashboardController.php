@@ -34,11 +34,9 @@ class DashboardController extends Controller
             )
             ->leftJoin('sesi_kegiatan_detail as skd', 'skd.sesi_kegiatan_id', '=', 'sk.id')
             ->leftJoin('users as u', 'u.id', '=', 'skd.user_id')
+            ->where('u.is_admin', '=', 0)
             ->groupBy('sk.id', 'sk.session_date', 'sk.weekday')
             ->orderBy('sk.session_date', 'asc')
-            ->whereHas('user', function ($q) {
-                $q->where('is_admin', 0);
-            })
             ->get();
 
         return view('dashboard', compact('rekap'));
