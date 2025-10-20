@@ -39,7 +39,7 @@ class AttendanceNormalizer
         $start = null; $end = null;
 
         if ($isPengajian) {
-            $start = (clone $local)->setTime(19,00,0);
+            $start = (clone $local)->setTime(19,20,0);
             $end   = (clone $local)->setTime(21,30,0);
             $isInWindow = $local->between($start, $end);
         }
