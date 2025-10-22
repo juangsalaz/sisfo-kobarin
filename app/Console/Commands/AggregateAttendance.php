@@ -22,7 +22,7 @@ class AggregateAttendance extends Command
             : now('Asia/Jakarta')->toDateString();
 
         $weekday = strtolower(Carbon::parse($date, 'Asia/Jakarta')->englishDayOfWeek);
-        if (!in_array($weekday, ['monday','thursday','friday'])) {
+        if (!in_array($weekday, ['monday','thursday','friday', 'wednesday'])) {
             $this->info("Tanggal $date bukan hari pengajian.");
             return Command::SUCCESS;
         }
