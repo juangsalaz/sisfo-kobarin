@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use App\Models\SesiKegiatan;
 use App\Models\SesiKegiatanDetail;
+use App\Models\Kegiatan;
 use App\Models\User;
 
 class GroupNotifier
