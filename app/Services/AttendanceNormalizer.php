@@ -24,6 +24,7 @@ class AttendanceNormalizer
 
         $map = [
             'monday' => 'mon',
+            'wednesday' => 'wed',
             'thursday' => 'thu',
             'friday' => 'fri',
         ];

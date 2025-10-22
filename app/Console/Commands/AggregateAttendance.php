@@ -29,6 +29,7 @@ class AggregateAttendance extends Command
 
         $map = [
             'monday' => 'mon',
+            'wednesday' => 'wed',
             'thursday' => 'thu',
             'friday' => 'fri',
         ];
