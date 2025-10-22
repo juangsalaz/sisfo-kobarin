@@ -13,7 +13,7 @@ class SyncAllUsers extends Command
 
     public function handle(FingerspotService $svc)
     {
-        $users = User::where('is_admin', 0)->where('jenis_kelamin', 2)->get();
+        $users = User::where('is_admin', 0)->where('jenis_kelamin', 2)->where('is_muda_mudi', 1)->get();
 
         foreach ($users as $user) {
             $res = $svc->setUserInfo($user);
