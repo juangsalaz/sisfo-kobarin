@@ -12,53 +12,78 @@ class GroupNotifier
 {
     public function buildTextForDate(string $dateWib): array
     {
-        // dateWib format Y-m-d (WIB)
         $occ = SesiKegiatan::whereDate('session_date', $dateWib)->first();
         if (!$occ) {
             return [false, "Tidak ada sesi pada tanggal {$dateWib}."];
         }
 
-        // ambil semua detail + user
+        // Ambil kegiatan untuk tanggal tsb (weekday map)
+        $weekday = strtolower(Carbon::parse($occ->session_date, 'Asia/Jakarta')->englishDayOfWeek);
+        $map = [
+            'monday' => 'mon',
+            'wednesday' => 'wed',
+            'thursday' => 'thu',
+            'friday' => 'fri',
+        ];
+
+        $def = Kegiatan::where('weekday', $map[$weekday] ?? 'mon')->first();
+        if (!$def) {
+            return [false, "Tidak ditemukan definisi kegiatan untuk hari {$weekday}."];
+        }
+
+        // Ambil semua detail dengan user (filter sesuai gabungan)
         $details = SesiKegiatanDetail::with('user')
             ->where('sesi_kegiatan_id', $occ->id)
-            ->whereHas('user', function ($q) {
+            ->whereHas('user', function ($q) use ($def) {
                 $q->where('is_admin', 0);
+
+                // Jika bukan gabungan → hanya dewasa
+                if ($def->is_gabungan == 0) {
+                    $q->where('is_muda_mudi', 0)
+                    ->where(function ($qq) {
+                        $qq->where('is_usia_nikah', 0)
+                            ->orWhere('is_usia_nikah', 1);
+                    });
+                } else {
+                    // Gabungan → hanya muda-mudi
+                    $q->where('is_muda_mudi', 1);
+                }
             })
             ->get();
 
+        // Hitung status
         $countTepat = $details->where('status', 'hadir')->count();
         $countTelat = $details->where('status', 'terlambat')->count();
         $countHadir = $countTepat + $countTelat;
         $countTidak = $details->where('status', 'tidak_hadir')->count();
-        $countIzin = $details->where('status', 'izin')->count();
+        $countIzin  = $details->where('status', 'izin')->count();
 
-        $absentNamesLaki = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 1)
-            ->pluck('user.name')
-            ->filter()
-            ->values()
-            ->all();
+        // Pisahkan nama berdasarkan status dan gender
+        $groupByStatusGender = fn($status, $jk) =>
+            $details->where('status', $status)
+                    ->where('user.jenis_kelamin', $jk)
+                    ->pluck('user.name')
+                    ->filter()
+                    ->values()
+                    ->all();
 
-        $absentNamesPerempuan = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 2)
-            ->pluck('user.name')
-            ->filter()
-            ->values()
-            ->all();
+        $izinLaki   = $groupByStatusGender('izin', 1);
+        $izinPerem  = $groupByStatusGender('izin', 2);
+        $tidakLaki  = $groupByStatusGender('tidak_hadir', 1);
+        $tidakPerem = $groupByStatusGender('tidak_hadir', 2);
 
-        $izinNamesLaki = $details->where('status', 'izin')->where('user.jenis_kelamin', 1)
-            ->pluck('user.name')
-            ->filter()
-            ->values()
-            ->all();
+        // Jika gabungan, pisahkan lagi muda-mudi pria & wanita
+        if ($def->is_gabungan == 1) {
+            $izinMuda   = $details->where('status', 'izin')->where('user.jenis_kelamin', 1)->pluck('user.name')->filter()->values()->all();
+            $izinMudi   = $details->where('status', 'izin')->where('user.jenis_kelamin', 2)->pluck('user.name')->filter()->values()->all();
+            $tidakMuda  = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 1)->pluck('user.name')->filter()->values()->all();
+            $tidakMudi  = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 2)->pluck('user.name')->filter()->values()->all();
+        }
 
-        $izinNamesPerempuan = $details->where('status', 'izin')->where('user.jenis_kelamin', 2)
-            ->pluck('user.name')
-            ->filter()
-            ->values()
-            ->all();
-
-        $hari  = Carbon::parse($occ->session_date, 'Asia/Jakarta')->translatedFormat('l'); // Senin/Kamis
-        $tgl   = Carbon::parse($occ->session_date, 'Asia/Jakarta')->translatedFormat('d M Y');
-        $jam   = Carbon::parse($occ->start_at_local)->format('H:i') . ' - ' . Carbon::parse($occ->end_at_local)->format('H:i');
+        // Format teks laporan
+        $hari = Carbon::parse($occ->session_date, 'Asia/Jakarta')->translatedFormat('l');
+        $tgl  = Carbon::parse($occ->session_date, 'Asia/Jakarta')->translatedFormat('d M Y');
+        $jam  = Carbon::parse($occ->start_at_local)->format('H:i') . ' - ' . Carbon::parse($occ->end_at_local)->format('H:i');
 
         $lines = [];
         $lines[] = "Rekap Kehadiran Sambung Kelompok {$hari}, {$tgl} ({$jam})";
@@ -67,42 +92,61 @@ class GroupNotifier
         $lines[] = "   └ Terlambat (di atas 20:00): {$countTelat}";
         $lines[] = "• Izin: {$countIzin}";
         $lines[] = "• Tidak hadir: {$countTidak}";
-        
+
+        // 🔸 IZIN
         if ($countIzin > 0) {
             $lines[] = "";
-            $lines[] = "Izin (Laki-laki):";
-            foreach ($izinNamesLaki as $n) {
-                $lines[] = "- Bpk. {$n}";
+            $lines[] = "Izin:";
+            if ($def->is_gabungan == 1) {
+                if ($izinMuda) {
+                    $lines[] = "   • Muda (L):";
+                    foreach ($izinMuda as $n) $lines[] = "     - {$n}";
+                }
+                if ($izinMudi) {
+                    $lines[] = "   • Mudi (P):";
+                    foreach ($izinMudi as $n) $lines[] = "     - {$n}";
+                }
+            } else {
+                if ($izinLaki) {
+                    $lines[] = "   • Laki-laki:";
+                    foreach ($izinLaki as $n) $lines[] = "     - Bpk. {$n}";
+                }
+                if ($izinPerem) {
+                    $lines[] = "   • Perempuan:";
+                    foreach ($izinPerem as $n) $lines[] = "     - Ibu {$n}";
+                }
             }
         }
 
-        if ($countIzin > 0) {
-            $lines[] = "";
-            $lines[] = "Izin (Perempuan):";
-            foreach ($izinNamesPerempuan as $n) {
-                $lines[] = "- Ibu {$n}";
-            }
-        }
-
+        // 🔸 TIDAK HADIR
         if ($countTidak > 0) {
             $lines[] = "";
-            $lines[] = "Tidak hadir (Laki-laki):";
-            foreach ($absentNamesLaki as $n) {
-                $lines[] = "- Bpk. {$n}";
-            }
-        }
-
-        if ($countTidak > 0) {
-            $lines[] = "";
-            $lines[] = "Tidak hadir (Perempuan):";
-            foreach ($absentNamesPerempuan as $n) {
-                $lines[] = "- Ibu {$n}";
+            $lines[] = "Tidak hadir:";
+            if ($def->is_gabungan == 1) {
+                if ($tidakMuda) {
+                    $lines[] = "   • Muda (L):";
+                    foreach ($tidakMuda as $n) $lines[] = "     - {$n}";
+                }
+                if ($tidakMudi) {
+                    $lines[] = "   • Mudi (P):";
+                    foreach ($tidakMudi as $n) $lines[] = "     - {$n}";
+                }
+            } else {
+                if ($tidakLaki) {
+                    $lines[] = "   • Laki-laki:";
+                    foreach ($tidakLaki as $n) $lines[] = "     - Bpk. {$n}";
+                }
+                if ($tidakPerem) {
+                    $lines[] = "   • Perempuan:";
+                    foreach ($tidakPerem as $n) $lines[] = "     - Ibu {$n}";
+                }
             }
         }
 
         $text = implode("\n", $lines);
         return [true, $text];
     }
+
 
     /**
      * Kirim teks ke group via API.
