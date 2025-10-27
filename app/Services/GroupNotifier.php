@@ -84,10 +84,34 @@ class GroupNotifier
             $lines[] = "";
             $lines[] = "Izin:";
             if ($def->is_gabungan == 1) {
+                 // Dewasa
+                $izinLaki = $details->where('status', 'izin')->where('user.jenis_kelamin', 1)->where('user.is_muda_mudi', 0)
+                    ->map(function ($d) {
+                        return $d->user->is_usia_nikah == 1
+                            ? "Mas {$d->user->name}"
+                            : "Bpk. {$d->user->name}";
+                    })->values()->all();
+
+                $izinPerem = $details->where('status', 'izin')->where('user.jenis_kelamin', 2)->where('user.is_muda_mudi', 0)
+                    ->map(function ($d) {
+                        return $d->user->is_usia_nikah == 1
+                            ? "Mbak {$d->user->name}"
+                            : "Ibu {$d->user->name}";
+                    })->values()->all();
+
+                if ($izinLaki) {
+                    $lines[] = "   • Laki-laki:";
+                    foreach ($izinLaki as $n) $lines[] = "     - {$n}";
+                }
+                if ($izinPerem) {
+                    $lines[] = "   • Perempuan:";
+                    foreach ($izinPerem as $n) $lines[] = "     - {$n}";
+                }
+                
                 // Muda-mudi
-                $izinMuda = $details->where('status', 'izin')->where('user.jenis_kelamin', 1)
+                $izinMuda = $details->where('status', 'izin')->where('user.jenis_kelamin', 1)->where('user.is_muda_mudi', 1)
                     ->pluck('user.name')->filter()->values()->all();
-                $izinMudi = $details->where('status', 'izin')->where('user.jenis_kelamin', 2)
+                $izinMudi = $details->where('status', 'izin')->where('user.jenis_kelamin', 2)->where('user.is_muda_mudi', 1)
                     ->pluck('user.name')->filter()->values()->all();
 
                 if ($izinMuda) {
@@ -100,14 +124,14 @@ class GroupNotifier
                 }
             } else {
                 // Dewasa
-                $izinLaki = $details->where('status', 'izin')->where('user.jenis_kelamin', 1)
+                $izinLaki = $details->where('status', 'izin')->where('user.jenis_kelamin', 1)->where('user.is_muda_mudi', 0)
                     ->map(function ($d) {
                         return $d->user->is_usia_nikah == 1
                             ? "Mas {$d->user->name}"
                             : "Bpk. {$d->user->name}";
                     })->values()->all();
 
-                $izinPerem = $details->where('status', 'izin')->where('user.jenis_kelamin', 2)
+                $izinPerem = $details->where('status', 'izin')->where('user.jenis_kelamin', 2)->where('user.is_muda_mudi', 0)
                     ->map(function ($d) {
                         return $d->user->is_usia_nikah == 1
                             ? "Mbak {$d->user->name}"
