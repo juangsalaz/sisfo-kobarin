@@ -104,6 +104,7 @@ class GroupNotifier
                     foreach ($izinLaki as $n) $lines[] = "     - {$n}";
                 }
                 if ($izinPerem) {
+                    $lines[] = "";
                     $lines[] = "   • Perempuan:";
                     foreach ($izinPerem as $n) $lines[] = "     - {$n}";
                 }
@@ -115,10 +116,12 @@ class GroupNotifier
                     ->pluck('user.name')->filter()->values()->all();
 
                 if ($izinMuda) {
+                    $lines[] = "";
                     $lines[] = "   • Muda (L):";
                     foreach ($izinMuda as $n) $lines[] = "     - {$n}";
                 }
                 if ($izinMudi) {
+                    $lines[] = "";
                     $lines[] = "   • Mudi (P):";
                     foreach ($izinMudi as $n) $lines[] = "     - {$n}";
                 }
@@ -143,6 +146,7 @@ class GroupNotifier
                     foreach ($izinLaki as $n) $lines[] = "     - {$n}";
                 }
                 if ($izinPerem) {
+                    $lines[] = "";
                     $lines[] = "   • Perempuan:";
                     foreach ($izinPerem as $n) $lines[] = "     - {$n}";
                 }
@@ -174,6 +178,7 @@ class GroupNotifier
                     foreach ($tidakLaki as $n) $lines[] = "     - {$n}";
                 }
                 if ($tidakPerem) {
+                    $lines[] = "";
                     $lines[] = "   • Perempuan:";
                     foreach ($tidakPerem as $n) $lines[] = "     - {$n}";
                 }
@@ -185,10 +190,12 @@ class GroupNotifier
                     ->pluck('user.name')->filter()->values()->all();
 
                 if ($tidakMuda) {
+                    $lines[] = "";
                     $lines[] = "   • Muda (L):";
                     foreach ($tidakMuda as $n) $lines[] = "     - {$n}";
                 }
                 if ($tidakMudi) {
+                    $lines[] = "";
                     $lines[] = "   • Mudi (P):";
                     foreach ($tidakMudi as $n) $lines[] = "     - {$n}";
                 }
@@ -213,6 +220,7 @@ class GroupNotifier
                     foreach ($tidakLaki as $n) $lines[] = "     - {$n}";
                 }
                 if ($tidakPerem) {
+                    $lines[] = "";
                     $lines[] = "   • Perempuan:";
                     foreach ($tidakPerem as $n) $lines[] = "     - {$n}";
                 }
