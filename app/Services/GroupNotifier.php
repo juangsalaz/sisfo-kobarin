@@ -41,7 +41,7 @@ class GroupNotifier
 
                 if ($def->is_gabungan == 1) {
                     // Gabungan: hanya muda-mudi
-                    $q->where('is_muda_mudi', 1);
+                    //$q->where('is_muda_mudi', 1);
                 } else {
                     // Dewasa: bukan muda-mudi
                     $q->where('is_muda_mudi', 0);
@@ -66,9 +66,9 @@ class GroupNotifier
         $lines[] = "Rekap Kehadiran Sambung Kelompok {$hari}, {$tgl} ({$jam})";
 
         if ($def->is_gabungan == 1) {
-            $lines[] = "(Kegiatan Gabungan Muda-Mudi)";
+            $lines[] = "(Kegiatan Sambung Kelompok)";
         } else {
-            $lines[] = "(Kegiatan Dewasa)";
+            $lines[] = "(Kegiatan Sambung Kelompok)";
         }
 
         $lines[] = "";
