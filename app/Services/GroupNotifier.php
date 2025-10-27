@@ -130,10 +130,34 @@ class GroupNotifier
             $lines[] = "";
             $lines[] = "Tidak hadir:";
             if ($def->is_gabungan == 1) {
+                //bapak2 dan usia nikah
+                $tidakLaki = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 1)->where('user.is_muda_mudi', 0)
+                    ->map(function ($d) {
+                        return $d->user->is_usia_nikah == 1
+                            ? "Mas {$d->user->name}"
+                            : "Bpk. {$d->user->name}";
+                    })->values()->all();
+
+                $tidakPerem = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 2)->where('user.is_muda_mudi', 0)
+                    ->map(function ($d) {
+                        return $d->user->is_usia_nikah == 1
+                            ? "Mbak {$d->user->name}"
+                            : "Ibu {$d->user->name}";
+                    })->values()->all();
+
+                if ($tidakLaki) {
+                    $lines[] = "   • Laki-laki:";
+                    foreach ($tidakLaki as $n) $lines[] = "     - {$n}";
+                }
+                if ($tidakPerem) {
+                    $lines[] = "   • Perempuan:";
+                    foreach ($tidakPerem as $n) $lines[] = "     - {$n}";
+                }
+
                 // Muda-mudi
-                $tidakMuda = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 1)
+                $tidakMuda = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 1)->where('user.is_muda_mudi', 1)
                     ->pluck('user.name')->filter()->values()->all();
-                $tidakMudi = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 2)
+                $tidakMudi = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 2)->where('user.is_muda_mudi', 1)
                     ->pluck('user.name')->filter()->values()->all();
 
                 if ($tidakMuda) {
@@ -146,14 +170,14 @@ class GroupNotifier
                 }
             } else {
                 // Dewasa
-                $tidakLaki = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 1)
+                $tidakLaki = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 1)->where('user.is_muda_mudi', 0)
                     ->map(function ($d) {
                         return $d->user->is_usia_nikah == 1
                             ? "Mas {$d->user->name}"
                             : "Bpk. {$d->user->name}";
                     })->values()->all();
 
-                $tidakPerem = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 2)
+                $tidakPerem = $details->where('status', 'tidak_hadir')->where('user.jenis_kelamin', 2)->where('user.is_muda_mudi', 0)
                     ->map(function ($d) {
                         return $d->user->is_usia_nikah == 1
                             ? "Mbak {$d->user->name}"
