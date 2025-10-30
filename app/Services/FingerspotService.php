@@ -11,9 +11,14 @@ class FingerspotService
 {
     public function setUserInfo(User $user): array
     {
+        $cloudId = config('services.fingerspot.cloud_id');
+        if ($user->jenis_kelamin == 2) {
+            $cloudId = config('services.fingerspot.cloud_id2');
+        }
+
         $payload = [
             'trans_id' => (string) Str::uuid(),
-            'cloud_id' => config('services.fingerspot.cloud_id'),
+            'cloud_id' => $cloudId,
             'data' => [
                 'pin'       => (string) $user->pin,
                 'name'      => (string) $user->name,

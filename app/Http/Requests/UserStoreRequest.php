@@ -13,6 +13,8 @@ class UserStoreRequest extends FormRequest
             'name'       => ['required','string','max:100'],
             'no_hp'      => ['nullable','string'],
             'pin'        => ['required','string','max:20','unique:users,pin'],
+            'jenis_kelamin' => ['required'],
+            'kategori' => ['required'],
         ];
     }
 }

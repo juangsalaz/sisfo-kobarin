@@ -13,7 +13,7 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name','email','password','is_admin',
-        'pin','privilege','fp_password','rfid','fp_template', 'no_hp',
+        'pin','privilege','fp_password','rfid','fp_template', 'no_hp', 'jenis_kelamin', 'is_muda_mudi', 'is_usia_nikah',
     ];
 
     protected $hidden = ['password','remember_token','fp_password'];

@@ -45,6 +45,14 @@ class UserController extends Controller
     public function store(UserStoreRequest $request, FingerspotService $svc) {
         $data = $request->validated();
 
+        $is_muda_mudi = 0;
+        $is_usia_nikah = 0;
+        if ($data['kategori'] === 'muda_mudi') {
+            $is_muda_mudi = 1;
+        } elseif ($request->kategori === 'usia_pra_nikah') {
+            $is_usia_nikah = 1;
+        }
+
         $user = User::create([
             'name'        => $data['name'],
             'email'       => '',
@@ -55,6 +63,9 @@ class UserController extends Controller
             'fp_password' => null,
             'rfid'        => null,
             'fp_template' =>null,
+            'jenis_kelamin' => $data['jenis_kelamin'],
+            'is_muda_mudi' => $is_muda_mudi,
+            'is_usia_nikah' => $is_usia_nikah,
         ]);
 
         $res = $svc->setUserInfo($user);
@@ -70,7 +81,15 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        if ($user->is_muda_mudi) {
+            $kategori = 'muda_mudi';
+        } elseif ($user->is_usia_nikah) {
+            $kategori = 'usia_pra_nikah';
+        } else {
+            $kategori = 'bapak_ibu';
+        }
+
+        return view('admin.users.edit', compact('user', 'kategori'));
     }
 
     public function update(UpdateUserRequest $request, User $user, FingerspotService $svc)
