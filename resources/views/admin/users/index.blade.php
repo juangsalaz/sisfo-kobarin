@@ -24,7 +24,7 @@
                 <tbody>
                 @foreach($users as $u)
                     <tr>
-                        <td class="py-2 pr-4">{{ $loop->iteration }}</td>
+                        <td class="py-2 pr-4" style="text-align: center;">{{ $loop->iteration }}</td>
                         <td class="p-2 border">{{ $u->name }}</td>
                         <td class="p-2 border">{{ $u->no_hp }}</td>
                         <td class="p-2 border">{{ $u->pin }}</td>
