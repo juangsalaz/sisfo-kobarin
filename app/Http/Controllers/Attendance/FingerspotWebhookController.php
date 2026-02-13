@@ -15,7 +15,7 @@ class FingerspotWebhookController extends Controller
     {
         $data = $request->all();
 
-       // if (($data['cloud_id'] == config('services.fingerspot.cloud_id') ||  $data['cloud_id'] == config('services.fingerspot.cloud_id2'))&& $data['type'] == 'attlog') {
+        if (($data['cloud_id'] == config('services.fingerspot.cloud_id') ||  $data['cloud_id'] == config('services.fingerspot.cloud_id2'))&& $data['type'] == 'attlog') {
             $pin     = $data['data']['pin'];
             $cloudId = $data['cloud_id'];
             $scanStr = $data['data']['scan'];
@@ -44,7 +44,7 @@ class FingerspotWebhookController extends Controller
                 'id'=>$raw->id,
                 'ts'=>$utc->toIso8601String()
             ],200);
-     //   }
+        }
 
         return response()->json([
                 'ok'=>false,
