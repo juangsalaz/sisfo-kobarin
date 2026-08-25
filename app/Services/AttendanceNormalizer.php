@@ -16,7 +16,7 @@ class AttendanceNormalizer
         if (!$user) return null;
 
         // Waktu local Asia/Jakarta
-        $local = Carbon::parse($raw->event_time)->timezone('Asia/Jakarta');
+        $local = Carbon::parse($raw->received_at)->timezone('Asia/Jakarta');
 
         // Cek apakah hari Senin / Kamis, jam 19:30–21:30
         $weekday = strtolower($local->englishDayOfWeek); 
@@ -40,7 +40,7 @@ class AttendanceNormalizer
         $start = null; $end = null;
 
         if ($isPengajian) {
-            $start = (clone $local)->setTime(19,20,0);
+            $start = (clone $local)->setTime(07,20,0);
             $end   = (clone $local)->setTime(21,30,0);
             $isInWindow = $local->between($start, $end);
         }
@@ -57,7 +57,7 @@ class AttendanceNormalizer
             // Buat event baru
             return Kehadiran::create([
                 'user_id'              => $user->id,
-                'event_time'           => $raw->event_time,
+                'event_time'           => $raw->received_at,
                 'local_time'           => $local,
                 'method'               => $raw->method,
                 'device'               => $raw->device,
