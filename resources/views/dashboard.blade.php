@@ -12,53 +12,58 @@
                     Selamat datang di SISFO Kota Barat
                 </div>
 
-                <div class="p-6 text-gray-900">
+                <div class="p-6 text-gray-900 border-b border-gray-100 font-semibold text-lg">
                     Rekap Kehadiran Pengajian
                 </div>
-                <table class="min-w-full text-sm" style="width: 100%;">
-                    <thead class="table-light">
-                        <tr class="border-b">
-                            <th>No</th>
-                            <th>Hari / Tanggal Kegiatan</th>
-                            <th colspan="2">Hadir</th>
-                            <th colspan="2">Izin</th>
-                            <th colspan="2">Tidak Hadir</th>
-                        </tr>
-                        <tr class="border-b">
-                            <th></th>
-                            <th></th>
-                            <th>L</th>
-                            <th>P</th>
-                            <th>L</th>
-                            <th>P</th>
-                            <th>L</th>
-                            <th>P</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($rekap as $i => $r)
-                            <tr class="border-b" style="height: 50px;">
-                                <td style="text-align: center;">{{ $i + 1 }}</td>
-                                <td style="text-align: center;">
-                                    {{ strtoupper($r->weekday) }} /
-                                    {{ \Carbon\Carbon::parse($r->session_date)->format('d M Y') }}
-                                </td>
-                                <td style="text-align: center;">{{ $r->hadir_l }}</td>
-                                <td style="text-align: center;">{{ $r->hadir_p }}</td>
-                                <td style="text-align: center;">{{ $r->izin_l }}</td>
-                                <td style="text-align: center;">{{ $r->izin_p }}</td>
-                                <td style="text-align: center;">{{ $r->tidak_hadir_l }}</td>
-                                <td style="text-align: center;">{{ $r->tidak_hadir_p }}</td>
+                <div class="p-6 overflow-x-auto">
+                    <table class="min-w-full text-sm border-collapse border border-gray-200" style="width: 100%;">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr class="border-b">
+                                <th class="p-2 border border-gray-200 text-center">No</th>
+                                <th class="p-2 border border-gray-200 text-center">Hari / Tanggal Kegiatan</th>
+                                <th colspan="2" class="p-2 border border-gray-200 text-center bg-green-50">Hadir</th>
+                                <th colspan="2" class="p-2 border border-gray-200 text-center bg-yellow-50">Izin</th>
+                                <th colspan="2" class="p-2 border border-gray-200 text-center bg-red-50">Tidak Hadir</th>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" class="text-center text-muted">Belum ada data kehadiran.</td>
+                            <tr class="border-b">
+                                <th class="p-2 border border-gray-200"></th>
+                                <th class="p-2 border border-gray-200"></th>
+                                <th class="p-2 border border-gray-200 text-center bg-green-50">L</th>
+                                <th class="p-2 border border-gray-200 text-center bg-green-50">P</th>
+                                <th class="p-2 border border-gray-200 text-center bg-yellow-50">L</th>
+                                <th class="p-2 border border-gray-200 text-center bg-yellow-50">P</th>
+                                <th class="p-2 border border-gray-200 text-center bg-red-50">L</th>
+                                <th class="p-2 border border-gray-200 text-center bg-red-50">P</th>
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @forelse($rekap as $i => $r)
+                                <tr class="border-b hover:bg-gray-50" style="height: 50px;">
+                                    <td class="p-2 border border-gray-200 text-center">{{ $rekap->firstItem() + $i }}</td>
+                                    <td class="p-2 border border-gray-200 text-center font-medium">
+                                        {{ strtoupper($r->weekday) }} /
+                                        {{ \Carbon\Carbon::parse($r->session_date)->format('d M Y') }}
+                                    </td>
+                                    <td class="p-2 border border-gray-200 text-center text-green-700 font-semibold">{{ $r->hadir_l }}</td>
+                                    <td class="p-2 border border-gray-200 text-center text-green-700 font-semibold">{{ $r->hadir_p }}</td>
+                                    <td class="p-2 border border-gray-200 text-center text-yellow-700 font-semibold">{{ $r->izin_l }}</td>
+                                    <td class="p-2 border border-gray-200 text-center text-yellow-700 font-semibold">{{ $r->izin_p }}</td>
+                                    <td class="p-2 border border-gray-200 text-center text-red-700 font-semibold">{{ $r->tidak_hadir_l }}</td>
+                                    <td class="p-2 border border-gray-200 text-center text-red-700 font-semibold">{{ $r->tidak_hadir_p }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="p-4 text-center text-gray-500">Belum ada data kehadiran.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+
+                    <div class="mt-4">
+                        {{ $rekap->links() }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
 </x-app-layout>

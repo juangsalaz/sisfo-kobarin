@@ -36,8 +36,10 @@ class DashboardController extends Controller
             ->leftJoin('users as u', 'u.id', '=', 'skd.user_id')
             ->where('u.is_admin', '=', 0)
             ->groupBy('sk.id', 'sk.session_date', 'sk.weekday')
-            ->orderBy('sk.session_date', 'asc')
-            ->get();
+            ->orderBy('sk.session_date', 'desc')
+            ->orderBy('sk.id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('dashboard', compact('rekap'));
     }
