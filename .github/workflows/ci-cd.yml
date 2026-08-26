@@ -68,7 +68,7 @@ jobs:
         password: ${{ secrets.PROD_PASSWORD }}
         port: ${{ secrets.PROD_PORT || 22 }}
         script: |
-          cd /var/www/sisfo-kobarin
+          cd /var/www/kobarin
           git pull origin main
           docker compose up -d --build
           docker compose exec -T app composer install --no-dev --optimize-autoloader --no-interaction
