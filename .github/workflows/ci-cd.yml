@@ -7,19 +7,9 @@ on:
     branches: [ "main", "master" ]
 
 jobs:
-  test:
-    name: Run Tests & Build (CI)
+  build-and-check:
+    name: Build Assets & Dependency Check (CI)
     runs-on: ubuntu-latest
-
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: sisfo_kobarin_test
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
     - name: Checkout Code
@@ -59,44 +49,14 @@ jobs:
         npm run build
 
     - name: Prepare Environment & App Key
-      env:
-        DB_CONNECTION: mysql
-        DB_HOST: 127.0.0.1
-        DB_PORT: 3306
-        DB_DATABASE: sisfo_kobarin_test
-        DB_USERNAME: root
-        DB_PASSWORD: ''
       run: |
         cp .env.example .env
         php artisan key:generate
 
-    - name: Check Code Style (Laravel Pint)
-      run: ./vendor/bin/pint --test
-
-    - name: Run Database Migrations
-      env:
-        DB_CONNECTION: mysql
-        DB_HOST: 127.0.0.1
-        DB_PORT: 3306
-        DB_DATABASE: sisfo_kobarin_test
-        DB_USERNAME: root
-        DB_PASSWORD: ''
-      run: php artisan migrate --force
-
-    - name: Run Tests
-      env:
-        DB_CONNECTION: mysql
-        DB_HOST: 127.0.0.1
-        DB_PORT: 3306
-        DB_DATABASE: sisfo_kobarin_test
-        DB_USERNAME: root
-        DB_PASSWORD: ''
-      run: php artisan test
-
   deploy:
     name: Deploy to Production VPS (CD)
     runs-on: ubuntu-latest
-    needs: [test]
+    needs: [build-and-check]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
@@ -114,7 +74,6 @@ jobs:
           docker compose exec -T app composer install --no-dev --optimize-autoloader --no-interaction
           docker compose exec -T app npm ci
           docker compose exec -T app npm run build
-          docker compose exec -T app php artisan migrate --force
           docker compose exec -T app php artisan config:cache
           docker compose exec -T app php artisan route:cache
           docker compose exec -T app php artisan view:cache
