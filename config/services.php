@@ -57,4 +57,9 @@ return [
         'personal_path' => env('WA_PERSONAL_PATH','/send-personal'),
     ],
 
+    'fonnte' => [
+        'token'        => env('FONNTE_TOKEN', 'WvV8tiuqdrjyHWjpaB7u'),
+        'group_target' => env('FONNTE_GROUP_TARGET', '6285231731037-1603636588@g.us'),
+    ],
+
 ];

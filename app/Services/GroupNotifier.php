@@ -234,27 +234,61 @@ class GroupNotifier
     /**
      * Kirim teks ke group via API.
      */
-    public function sendToGroup(string $text, ?string $groupName = null): array
+    // public function sendToGroup(string $text, ?string $groupName = null): array
+    // {
+    //     $base = rtrim(config('services.group_api.base_url'), '/');
+    //     $key  = (string) config('services.group_api.api_key');
+    //     $grp  = $groupName ?: (string) config('services.group_api.group');
+
+    //     try {
+    //         $res = Http::withHeaders(['x-api-key' => $key])
+    //             ->acceptJson()
+    //             ->asJson()
+    //             ->timeout(15)
+    //             ->retry(2, 500)
+    //             ->post($base . '/send-group', [
+    //                 'groupName' => $grp,
+    //                 'text'      => $text,
+    //             ]);
+
+    //         return [
+    //             'ok'     => $res->successful(),
+    //             'status' => $res->status(),
+    //             'body'   => rescue(fn() => $res->json(), $res->body(), report:false),
+    //         ];
+    //     } catch (\Throwable $e) {
+    //         return ['ok' => false, 'status' => 0, 'body' => ['error' => $e->getMessage()]];
+    //     }
+    // }
+
+    /**
+     * Kirim teks ke group via Fonnte API.
+     */
+    public function sendToGroup(string $text, ?string $target = null): array
     {
-        $base = rtrim(config('services.group_api.base_url'), '/');
-        $key  = (string) config('services.group_api.api_key');
-        $grp  = $groupName ?: (string) config('services.group_api.group');
+        $token  = (string) config('services.fonnte.token');
+        $target = $target ?: (string) config('services.fonnte.group_target');
 
         try {
-            $res = Http::withHeaders(['x-api-key' => $key])
-                ->acceptJson()
-                ->asJson()
+            $res = Http::withHeaders([
+                    'Authorization' => $token,
+                ])
+                ->asForm() // Fonnte membutuhkan format x-www-form-urlencoded / multipart
                 ->timeout(15)
                 ->retry(2, 500)
-                ->post($base . '/send-group', [
-                    'groupName' => $grp,
-                    'text'      => $text,
+                ->post('https://api.fonnte.com/send', [
+                    'target'      => $target,
+                    'message'     => $text,
+                    'countryCode' => '62',
                 ]);
 
+            $body = rescue(fn() => $res->json(), $res->body(), report: false);
+            $statusFonnte = is_array($body) ? ($body['status'] ?? false) : false;
+
             return [
-                'ok'     => $res->successful(),
+                'ok'     => $res->successful() && $statusFonnte,
                 'status' => $res->status(),
-                'body'   => rescue(fn() => $res->json(), $res->body(), report:false),
+                'body'   => $body,
             ];
         } catch (\Throwable $e) {
             return ['ok' => false, 'status' => 0, 'body' => ['error' => $e->getMessage()]];
