@@ -58,8 +58,9 @@ return [
     ],
 
     'fonnte' => [
-        'token'        => env('FONNTE_TOKEN', 'WvV8tiuqdrjyHWjpaB7u'),
-        'group_target' => env('FONNTE_GROUP_TARGET', '6285231731037-1603636588@g.us'),
+        'token'               => env('FONNTE_TOKEN', 'WvV8tiuqdrjyHWjpaB7u'),
+        'group_target'        => env('FONNTE_GROUP_TARGET', '6285231731037-1603636588@g.us'),
+        'absent_group_target' => env('FONNTE_ABSENT_GROUP_TARGET', env('FONNTE_GROUP_TARGET')),
     ],
 
 ];

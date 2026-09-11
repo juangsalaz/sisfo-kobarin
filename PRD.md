@@ -194,6 +194,7 @@ erDiagram
 | **21:20 WIB** | Senin, Kamis, Jumat | `php artisan attendance:aggregate` | Menghitung dan merekap status presensi hari tersebut |
 | **21:45 WIB** | Senin, Kamis, Jumat | `php artisan attendance:send-recap` | Mengirim pesan rekapitulasi lengkap ke Grup WA Pengurus |
 | **21:46 WIB** | Senin, Kamis, Jumat | `php artisan wa:send-personal` | Mengirim pesan perhatian/sapaan personal ke jamaah yang absen |
+| **21:00 WIB** | Tgl 30 (Tgl 28 Feb) | `php artisan attendance:send-monthly-absent-recap` | Mengirim rekap 10 Jamaah L/P terbanyak absen (1 bulan) ke WA Group |
 
 ---
 

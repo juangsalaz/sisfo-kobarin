@@ -53,4 +53,12 @@ Schedule::command('wa:send-personal')
     ->dailyAt('21:46')
     ->timezone('Asia/Jakarta');
 
+Schedule::command('attendance:send-monthly-absent-recap')
+    ->dailyAt('21:00')
+    ->timezone('Asia/Jakarta')
+    ->when(function () {
+        $today = now('Asia/Jakarta');
+        return ($today->month === 2) ? ($today->day === 28) : ($today->day === 30);
+    });
+
 
