@@ -58,6 +58,7 @@ class DashboardController extends Controller
                 ->join('sesi_kegiatan_detail as skd', 'skd.user_id', '=', 'u.id')
                 ->join('sesi_kegiatan as sk', 'sk.id', '=', 'skd.sesi_kegiatan_id')
                 ->where('u.is_admin', 0)
+                ->where('u.is_muda_mudi', 0)
                 ->where('u.jenis_kelamin', $gender)
                 ->where('sk.session_date', '>=', $startDate30Days)
                 ->groupBy('u.id', 'u.name', 'u.jenis_kelamin', 'u.is_muda_mudi', 'u.is_usia_nikah')

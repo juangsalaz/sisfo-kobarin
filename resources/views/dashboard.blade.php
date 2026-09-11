@@ -157,6 +157,7 @@
                         <div class="flex items-center gap-2">
                             <span class="px-2 py-0.5 rounded text-xs font-bold bg-blue-600 text-white">Laki-laki</span>
                             <span>10 Paling Jarang Hadir (30 Hari)</span>
+                            <span class="text-xs font-normal text-gray-500">(Non Muda-Mudi)</span>
                         </div>
                     </div>
                     <div class="p-4 overflow-x-auto">
@@ -207,6 +208,7 @@
                         <div class="flex items-center gap-2">
                             <span class="px-2 py-0.5 rounded text-xs font-bold bg-pink-600 text-white">Perempuan</span>
                             <span>10 Paling Jarang Hadir (30 Hari)</span>
+                            <span class="text-xs font-normal text-gray-500">(Non Muda-Mudi)</span>
                         </div>
                     </div>
                     <div class="p-4 overflow-x-auto">
