@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 Route::get('/', fn() => view('welcome'));
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard/detail', [DashboardController::class, 'detail'])->middleware(['auth', 'verified'])->name('dashboard.detail');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

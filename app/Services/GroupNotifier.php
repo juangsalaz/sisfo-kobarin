@@ -63,6 +63,8 @@ class GroupNotifier
 
         // Mulai susun teks laporan
         $lines = [];
+        $lines[] = "🤖 Pesan ini dikirim secara otomatis oleh sistem (bot).";
+        $lines[] = "";
         $lines[] = "Rekap Kehadiran Sambung Kelompok {$hari}, {$tgl} ({$jam})";
 
         if ($def->is_gabungan == 1) {

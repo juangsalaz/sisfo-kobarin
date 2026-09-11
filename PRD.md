@@ -17,6 +17,11 @@
 #### Executive Summary
 **SISFO KOBARIN** adalah sistem informasi manajemen presensi dan otomatisasi rekapitulasi kehadiran jamaah pengajian kelompok. Sistem ini mengintegrasikan mesin absensi biometrik (Fingerspot Cloud API) via webhook realtime dengan gateway WhatsApp API untuk rekapitulasi otomatis ke WhatsApp Group Pengurus serta pengiriman pesan pembinaan/konfirmasi personal ke nomor jamaah yang tidak hadir.
 
+> [!CAUTION]
+> **PERINGATAN KRUSIAL LINGKUNGAN PRODUCTION:**
+> Sistem saat ini terhubung langsung ke **Database Production**. **DILARANG KERAS** mengeksekusi perintah migrasi database (`php artisan migrate`, `php artisan migrate:fresh`, `php artisan migrate:rollback`, `php artisan db:wipe`, dll.) dalam situasi apa pun demi menjaga integritas dan keamanan data live.
+
+
 ---
 
 ### 2. System Purpose & Problem Statement
@@ -202,6 +207,8 @@ erDiagram
    * Penanganan error gracefully agar kegagalan gateway API tidak menghentikan siklus agregasi database.
 3. **Internasionalisasi & Zona Waktu:**
    * Seluruh komputasi waktu diikat secara eksplisit ke zona waktu `Asia/Jakarta` (WIB).
+4. **Proteksi Database Production:**
+   * **DILARANG KERAS** mengeksekusi perintah migrasi database (`php artisan migrate`, `migrate:fresh`, `migrate:rollback`, `db:wipe`, dll.) karena environment terhubung langsung ke database live production.
 
 ---
 

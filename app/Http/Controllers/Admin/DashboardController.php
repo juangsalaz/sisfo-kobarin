@@ -43,4 +43,90 @@ class DashboardController extends Controller
 
         return view('dashboard', compact('rekap'));
     }
+
+    public function detail(Request $request)
+    {
+        $sesiId = $request->input('sesi_id');
+        $status = $request->input('status'); // 'hadir', 'izin', 'tidak_hadir'
+        $gender = $request->input('gender'); // 1 (L), 2 (P)
+
+        $sesi = DB::table('sesi_kegiatan')->where('id', $sesiId)->first();
+        if (!$sesi) {
+            return response()->json(['error' => 'Sesi tidak ditemukan'], 404);
+        }
+
+        $query = DB::table('sesi_kegiatan_detail as skd')
+            ->join('users as u', 'u.id', '=', 'skd.user_id')
+            ->where('skd.sesi_kegiatan_id', $sesiId)
+            ->where('u.is_admin', 0);
+
+        if ($status === 'hadir') {
+            $query->whereIn('skd.status', ['hadir', 'terlambat']);
+        } elseif ($status === 'izin') {
+            $query->where('skd.status', 'izin');
+        } elseif ($status === 'tidak_hadir') {
+            $query->where('skd.status', 'tidak_hadir');
+        }
+
+        if ($gender) {
+            $query->where('u.jenis_kelamin', $gender);
+        }
+
+        $users = $query->select(
+            'u.id',
+            'u.name',
+            'u.no_hp',
+            'u.jenis_kelamin',
+            'u.is_muda_mudi',
+            'u.is_usia_nikah',
+            'skd.check_in',
+            'skd.late_minutes',
+            'skd.status'
+        )
+        ->orderBy('u.name', 'asc')
+        ->get()
+        ->map(function ($item) {
+            $kategori = 'Bapak-bapak';
+            if ($item->jenis_kelamin == 2) {
+                $kategori = 'Ibu-ibu';
+            }
+            if ($item->is_usia_nikah) {
+                $kategori = ($item->jenis_kelamin == 1) ? 'Mas (Usia Nikah)' : 'Mbak (Usia Nikah)';
+            } elseif ($item->is_muda_mudi) {
+                $kategori = ($item->jenis_kelamin == 1) ? 'Muda-Mudi (L)' : 'Muda-Mudi (P)';
+            }
+
+            $checkInFormatted = $item->check_in ? Carbon::parse($item->check_in)->format('H:i') . ' WIB' : '-';
+            $keterangan = '-';
+            if ($item->status === 'terlambat') {
+                $keterangan = 'Terlambat ' . ($item->late_minutes ?? 0) . ' mnt';
+            } elseif ($item->status === 'hadir') {
+                $keterangan = 'Tepat Waktu';
+            } elseif ($item->status === 'izin') {
+                $keterangan = 'Izin';
+            } else {
+                $keterangan = 'Tidak Hadir';
+            }
+
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'no_hp' => $item->no_hp ?? '-',
+                'kategori' => $kategori,
+                'status' => $item->status,
+                'check_in' => $checkInFormatted,
+                'keterangan' => $keterangan,
+            ];
+        });
+
+        $dateFormatted = Carbon::parse($sesi->session_date)->format('d M Y');
+        $genderText = $gender == 1 ? 'Laki-laki' : ($gender == 2 ? 'Perempuan' : 'Semua');
+        $statusText = $status === 'hadir' ? 'Hadir' : ($status === 'izin' ? 'Izin' : 'Tidak Hadir');
+
+        return response()->json([
+            'title' => "Daftar Jamaah $statusText ($genderText) - " . strtoupper($sesi->weekday) . ", $dateFormatted",
+            'users' => $users,
+            'total' => $users->count(),
+        ]);
+    }
 }
