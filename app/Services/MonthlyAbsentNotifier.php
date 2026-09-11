@@ -50,7 +50,7 @@ class MonthlyAbsentNotifier
         $nowFormatted = Carbon::now('Asia/Jakarta')->translatedFormat('d F Y');
 
         $lines = [];
-        $lines[] = "🤖 *Pesan Otomatis Sistem (SISFO KOBARIN)*";
+        $lines[] = "🤖 *Pesan Otomatis Sistem*";
         $lines[] = "";
         $lines[] = "📋 *Rekapitulasi 10 Jamaah Paling Jarang Hadir ({$days} Hari Terakhir)*";
         $lines[] = "📅 Per Tanggal: {$nowFormatted}";
@@ -72,7 +72,7 @@ class MonthlyAbsentNotifier
         $lines[] = "";
 
         // Section Perempuan
-        $lines[] = "👩 *JAMAAH PEREMPUAN:*";
+        $lines[] = "🧕🏼 *JAMAAH PEREMPUAN:*";
         if ($perempuan->isEmpty()) {
             $lines[] = "• Tidak ada data / Semua hadir.";
         } else {
