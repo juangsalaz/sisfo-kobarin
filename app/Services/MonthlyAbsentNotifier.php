@@ -50,7 +50,7 @@ class MonthlyAbsentNotifier
         $nowFormatted = Carbon::now('Asia/Jakarta')->translatedFormat('d F Y');
 
         $lines = [];
-        $lines[] = "🤖 *Pesan Otomatis Sistem*";
+        $lines[] = "🤖 *Pesan ini dikirim otomatis dari sistem*";
         $lines[] = "";
         $lines[] = "📋 *Rekapitulasi 10 Jamaah Paling Jarang Hadir ({$days} Hari Terakhir)*";
         $lines[] = "📅 Per Tanggal: {$nowFormatted}";
