@@ -43,41 +43,47 @@ class DashboardController extends Controller
 
         $startDate30Days = Carbon::now('Asia/Jakarta')->subDays(30)->toDateString();
 
-        $topTidakHadir = DB::table('users as u')
-            ->select(
-                'u.id',
-                'u.name',
-                'u.jenis_kelamin',
-                'u.is_muda_mudi',
-                'u.is_usia_nikah',
-                DB::raw("SUM(CASE WHEN skd.status IN ('hadir', 'terlambat') THEN 1 ELSE 0 END) as jumlah_hadir"),
-                DB::raw("SUM(CASE WHEN skd.status = 'tidak_hadir' THEN 1 ELSE 0 END) as jumlah_tidak_hadir"),
-                DB::raw("SUM(CASE WHEN skd.status = 'izin' THEN 1 ELSE 0 END) as jumlah_izin")
-            )
-            ->join('sesi_kegiatan_detail as skd', 'skd.user_id', '=', 'u.id')
-            ->join('sesi_kegiatan as sk', 'sk.id', '=', 'skd.sesi_kegiatan_id')
-            ->where('u.is_admin', 0)
-            ->where('sk.session_date', '>=', $startDate30Days)
-            ->groupBy('u.id', 'u.name', 'u.jenis_kelamin', 'u.is_muda_mudi', 'u.is_usia_nikah')
-            ->orderByDesc('jumlah_tidak_hadir')
-            ->orderBy('jumlah_hadir', 'asc')
-            ->limit(10)
-            ->get()
-            ->map(function ($item) {
-                $kategori = 'Bapak-bapak';
-                if ($item->jenis_kelamin == 2) {
-                    $kategori = 'Ibu-ibu';
-                }
-                if ($item->is_usia_nikah) {
-                    $kategori = ($item->jenis_kelamin == 1) ? 'Mas (Usia Nikah)' : 'Mbak (Usia Nikah)';
-                } elseif ($item->is_muda_mudi) {
-                    $kategori = ($item->jenis_kelamin == 1) ? 'Muda-Mudi (L)' : 'Muda-Mudi (P)';
-                }
-                $item->kategori = $kategori;
-                return $item;
-            });
+        $getTopTidakHadirByGender = function ($gender) use ($startDate30Days) {
+            return DB::table('users as u')
+                ->select(
+                    'u.id',
+                    'u.name',
+                    'u.jenis_kelamin',
+                    'u.is_muda_mudi',
+                    'u.is_usia_nikah',
+                    DB::raw("SUM(CASE WHEN skd.status IN ('hadir', 'terlambat') THEN 1 ELSE 0 END) as jumlah_hadir"),
+                    DB::raw("SUM(CASE WHEN skd.status = 'tidak_hadir' THEN 1 ELSE 0 END) as jumlah_tidak_hadir"),
+                    DB::raw("SUM(CASE WHEN skd.status = 'izin' THEN 1 ELSE 0 END) as jumlah_izin")
+                )
+                ->join('sesi_kegiatan_detail as skd', 'skd.user_id', '=', 'u.id')
+                ->join('sesi_kegiatan as sk', 'sk.id', '=', 'skd.sesi_kegiatan_id')
+                ->where('u.is_admin', 0)
+                ->where('u.jenis_kelamin', $gender)
+                ->where('sk.session_date', '>=', $startDate30Days)
+                ->groupBy('u.id', 'u.name', 'u.jenis_kelamin', 'u.is_muda_mudi', 'u.is_usia_nikah')
+                ->orderByDesc('jumlah_tidak_hadir')
+                ->orderBy('jumlah_hadir', 'asc')
+                ->limit(10)
+                ->get()
+                ->map(function ($item) {
+                    $kategori = 'Bapak-bapak';
+                    if ($item->jenis_kelamin == 2) {
+                        $kategori = 'Ibu-ibu';
+                    }
+                    if ($item->is_usia_nikah) {
+                        $kategori = ($item->jenis_kelamin == 1) ? 'Mas (Usia Nikah)' : 'Mbak (Usia Nikah)';
+                    } elseif ($item->is_muda_mudi) {
+                        $kategori = ($item->jenis_kelamin == 1) ? 'Muda-Mudi (L)' : 'Muda-Mudi (P)';
+                    }
+                    $item->kategori = $kategori;
+                    return $item;
+                });
+        };
 
-        return view('dashboard', compact('rekap', 'topTidakHadir'));
+        $topTidakHadirLaki = $getTopTidakHadirByGender(1);
+        $topTidakHadirPerempuan = $getTopTidakHadirByGender(2);
+
+        return view('dashboard', compact('rekap', 'topTidakHadirLaki', 'topTidakHadirPerempuan'));
     }
 
     public function detail(Request $request)
