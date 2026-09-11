@@ -148,6 +148,57 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Tabel 10 Jamaah Paling Jarang Hadir -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-8">
+                <div class="p-6 text-gray-900 border-b border-gray-100 font-semibold text-lg flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <span class="inline-block w-3 h-3 rounded-full bg-red-500"></span>
+                        <span>10 Jamaah Paling Jarang Hadir (30 Hari Terakhir)</span>
+                    </div>
+                    <span class="text-xs font-normal text-gray-500">Diurutkan berdasarkan ketidakhadiran terbanyak</span>
+                </div>
+                <div class="p-6 overflow-x-auto">
+                    <table class="min-w-full text-sm border-collapse border border-gray-200" style="width: 100%;">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr class="border-b">
+                                <th class="p-2 border border-gray-200 text-center w-12">No</th>
+                                <th class="p-2 border border-gray-200 text-left">Nama Jamaah</th>
+                                <th class="p-2 border border-gray-200 text-left">Kategori</th>
+                                <th class="p-2 border border-gray-200 text-center bg-green-50">Hadir</th>
+                                <th class="p-2 border border-gray-200 text-center bg-red-50">Tidak Hadir</th>
+                                <th class="p-2 border border-gray-200 text-center bg-yellow-50">Izin</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($topTidakHadir as $idx => $user)
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-2 border border-gray-200 text-center font-medium text-gray-500">{{ $idx + 1 }}</td>
+                                    <td class="p-2 border border-gray-200 font-semibold text-gray-900">{{ $user->name }}</td>
+                                    <td class="p-2 border border-gray-200 text-xs">
+                                        <span class="px-2.5 py-1 rounded-full font-medium bg-gray-100 text-gray-700">
+                                            {{ $user->kategori }}
+                                        </span>
+                                    </td>
+                                    <td class="p-2 border border-gray-200 text-center font-semibold text-green-700 bg-green-50/50">
+                                        {{ $user->jumlah_hadir }} Sesi
+                                    </td>
+                                    <td class="p-2 border border-gray-200 text-center font-bold text-red-700 bg-red-50">
+                                        {{ $user->jumlah_tidak_hadir }} Sesi
+                                    </td>
+                                    <td class="p-2 border border-gray-200 text-center font-semibold text-yellow-700 bg-yellow-50/50">
+                                        {{ $user->jumlah_izin }} Sesi
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="p-4 text-center text-gray-500">Belum ada data statistik ketidakhadiran 30 hari terakhir.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
         <!-- Detail Modal -->
