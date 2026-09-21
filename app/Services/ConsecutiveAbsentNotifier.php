@@ -18,8 +18,12 @@ class ConsecutiveAbsentNotifier
             ? Carbon::parse($targetDate, 'Asia/Jakarta')->toDateString()
             : Carbon::now('Asia/Jakarta')->toDateString();
 
-        // Ambil 3 sesi pengajian terakhir hingga tanggal $date
+        // Ambil 3 sesi pengajian (Senin & Kamis) terakhir hingga tanggal $date
         $last3Sessions = SesiKegiatan::whereDate('session_date', '<=', $date)
+            ->where(function ($q) {
+                $q->whereIn('weekday', ['mon', 'thu'])
+                  ->orWhereRaw("LOWER(DAYNAME(session_date)) IN ('monday', 'thursday')");
+            })
             ->orderBy('session_date', 'desc')
             ->orderBy('id', 'desc')
             ->limit(3)
