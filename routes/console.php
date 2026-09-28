@@ -10,61 +10,66 @@ Artisan::command('inspire', function () {
 
 Schedule::command('attendance:aggregate')
     ->mondays()
-    ->dailyAt('21:20')
+    ->dailyAt('23:00')
     ->timezone('Asia/Jakarta');
 
 Schedule::command('attendance:aggregate')
     ->thursdays()
-    ->dailyAt('21:20')
+    ->dailyAt('23:00')
     ->timezone('Asia/Jakarta');
 
 Schedule::command('attendance:aggregate')
     ->fridays()
-    ->dailyAt('21:20')
+    ->dailyAt('23:00')
     ->timezone('Asia/Jakarta');
 
 Schedule::command('attendance:send-recap')
     ->mondays()
-    ->dailyAt('21:45')
+    ->dailyAt('23:15')
     ->timezone('Asia/Jakarta');
 
 Schedule::command('attendance:send-recap')
     ->thursdays()
-    ->dailyAt('21:45')
+    ->dailyAt('23:15')
     ->timezone('Asia/Jakarta');
 
 Schedule::command('attendance:send-recap')
     ->fridays()
-    ->dailyAt('21:45')
+    ->dailyAt('23:15')
     ->timezone('Asia/Jakarta');
 
-Schedule::command('wa:send-personal')
-    ->mondays()
-    ->dailyAt('21:46')
-    ->timezone('Asia/Jakarta');
+// Schedule::command('wa:send-personal')
+//     ->mondays()
+//     ->dailyAt('23:16')
+//     ->timezone('Asia/Jakarta');
 
-Schedule::command('wa:send-personal')
-    ->thursdays()
-    ->dailyAt('21:46')
-    ->timezone('Asia/Jakarta');
+// Schedule::command('wa:send-personal')
+//     ->thursdays()
+//     ->dailyAt('23:16')
+//     ->timezone('Asia/Jakarta');
 
-Schedule::command('wa:send-personal')
-    ->fridays()
-    ->dailyAt('21:46')
-    ->timezone('Asia/Jakarta');
+// Schedule::command('wa:send-personal')
+//     ->fridays()
+//     ->dailyAt('23:16')
+//     ->timezone('Asia/Jakarta');
 
 Schedule::command('attendance:send-monthly-absent-recap')
     ->monthlyOn(1, '08:00')
     ->timezone('Asia/Jakarta');
 
-Schedule::command('attendance:send-3x-absent-recap')
+Schedule::command('attendance:send-fingerprint-reminder')
     ->mondays()
-    ->dailyAt('21:47')
+    ->dailyAt('21:15')
     ->timezone('Asia/Jakarta');
 
-Schedule::command('attendance:send-3x-absent-recap')
+Schedule::command('attendance:send-fingerprint-reminder')
     ->thursdays()
-    ->dailyAt('21:47')
+    ->dailyAt('21:15')
+    ->timezone('Asia/Jakarta');
+
+Schedule::command('attendance:send-fingerprint-reminder')
+    ->fridays()
+    ->dailyAt('21:15')
     ->timezone('Asia/Jakarta');
 
 
