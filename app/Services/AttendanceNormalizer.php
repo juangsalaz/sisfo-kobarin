@@ -39,25 +39,10 @@ class AttendanceNormalizer
         $isInWindow = false;
         $start = null; $end = null;
 
-        if ($isPengajian && $def) {
-            $startTimeStr = $def->start_time instanceof \Carbon\CarbonInterface
-                ? $def->start_time->format('H:i:s') : (string) $def->start_time;
-            $endTimeStr = $def->end_time instanceof \Carbon\CarbonInterface
-                ? $def->end_time->format('H:i:s') : (string) $def->end_time;
-
-            $dateStr = $local->format('Y-m-d');
-            $start = Carbon::createFromFormat('Y-m-d H:i:s', "{$dateStr} {$startTimeStr}", 'Asia/Jakarta');
-            $end   = Carbon::createFromFormat('Y-m-d H:i:s', "{$dateStr} {$endTimeStr}",   'Asia/Jakarta');
-
-            // Berikan toleransi jendela scan (45 menit sebelum jam mulai s.d. 30 menit setelah jam selesai)
-            $windowStart = $start->copy()->subMinutes(45);
-            $windowEnd   = $end->copy()->addMinutes(30);
-
-            $isInWindow = $local->between($windowStart, $windowEnd);
-            
-            // Simpan variabel start & end untuk pengecekan duplikasi
-            $start = $windowStart;
-            $end   = $windowEnd;
+        if ($isPengajian) {
+            $start = (clone $local)->setTime(19,00,0);
+            $end   = (clone $local)->setTime(21,30,0);
+            $isInWindow = $local->between($start, $end);
         }
 
         if ($isInWindow) {
