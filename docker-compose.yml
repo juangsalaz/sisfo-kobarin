@@ -14,17 +14,17 @@ services:
     networks: 
       - kobarin-network
   
-  scheduler:
-    image: php:8.3-cli
-    container_name: laravel-scheduler
-    restart: unless-stopped
-    working_dir: /var/www/kobarin
-    volumes:
-      - .:/var/www/kobarin
-    depends_on:
-      - app
-    command: >
-      sh -lc 'while :; do php artisan schedule:run --no-interaction >> storage/logs/scheduler.log 2>&1; sleep 60; done'
+  # scheduler:
+  #   image: php:8.3-cli
+  #   container_name: laravel-scheduler
+  #   restart: unless-stopped
+  #   working_dir: /var/www/kobarin
+  #   volumes:
+  #     - .:/var/www/kobarin
+  #   depends_on:
+  #     - app
+  #   command: >
+  #     sh -lc 'while :; do php artisan schedule:run --no-interaction >> storage/logs/scheduler.log 2>&1; sleep 60; done'
 
 
   webserver:

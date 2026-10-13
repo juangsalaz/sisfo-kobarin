@@ -12,7 +12,8 @@ class FingerprintReminderNotifier
     public function buildText(): string
     {
         $lines = [];
-        $lines[] = "Pesan ini dikirim otomatis oleh sistem (bot)";
+        $lines[] = "🤖 Pesan ini dikirim secara otomatis oleh sistem (bot).";
+        $lines[] = "";
         $lines[] = "Assalamualaikum, mengingatkan kepada penerobos supaya segera memasukkan data jamaah yang izin atau absen manual jamaah yang hadir sambung ke aplikasi.";
         $lines[] = "";
         $lines[] = "Data kehadiran akan direkap oleh sistem jam 23.00 dan laporan akan dikirimkan ke group pengurus pada jam 23.15";
