@@ -57,6 +57,17 @@ Schedule::command('attendance:send-monthly-absent-recap')
     ->monthlyOn(1, '08:00')
     ->timezone('Asia/Jakarta');
 
+// Laporan jamaah 3x tidak hadir berturut-turut (setelah agregasi 23:00)
+Schedule::command('attendance:send-3x-absent-recap')
+    ->mondays()
+    ->dailyAt('21:17')
+    ->timezone('Asia/Jakarta');
+
+Schedule::command('attendance:send-3x-absent-recap')
+    ->thursdays()
+    ->dailyAt('21:17')
+    ->timezone('Asia/Jakarta');
+
 Schedule::command('attendance:send-fingerprint-reminder')
     ->mondays()
     ->dailyAt('19:30')
@@ -67,9 +78,9 @@ Schedule::command('attendance:send-fingerprint-reminder')
     ->dailyAt('19:30')
     ->timezone('Asia/Jakarta');
 
-Schedule::command('attendance:send-fingerprint-reminder')
-    ->fridays()
-    ->dailyAt('19.30:15')
-    ->timezone('Asia/Jakarta');
+// Schedule::command('attendance:send-fingerprint-reminder')
+//     ->fridays()
+//     ->dailyAt('19:30')
+//     ->timezone('Asia/Jakarta');
 
 
