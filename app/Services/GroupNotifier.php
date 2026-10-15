@@ -76,8 +76,8 @@ class GroupNotifier
         $lines[] = "";
         $lines[] = "📊 Rekapitulasi:";
         $lines[] = "• Hadir: {$countHadir}";
-        $lines[] = "   └ Tepat waktu (19:45 - 20:00): {$countTepat}";
-        $lines[] = "   └ Terlambat (di atas 20:00): {$countTelat}";
+        $lines[] = "   └ Tepat waktu (17:45 - 18:00): {$countTepat}";
+        $lines[] = "   └ Terlambat (di atas 18:00): {$countTelat}";
         $lines[] = "• Izin: {$countIzin}";
         $lines[] = "• Tidak hadir: {$countTidak}";
 

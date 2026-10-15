@@ -16,7 +16,7 @@ class FingerprintReminderNotifier
         $lines[] = "";
         $lines[] = "Assalamualaikum, mengingatkan kepada penerobos supaya segera memasukkan data jamaah yang izin atau absen manual jamaah yang hadir sambung ke aplikasi.";
         $lines[] = "";
-        $lines[] = "Data kehadiran akan direkap oleh sistem jam 23.00 dan laporan akan dikirimkan ke group pengurus pada jam 23.15";
+        $lines[] = "Data kehadiran akan direkap oleh sistem jam 21.00 dan laporan akan dikirimkan ke group pengurus pada jam 21.15";
         $lines[] = "";
         $lines[] = "Alhamdulillah jaza kumullahu khoiro";
 

@@ -10,32 +10,32 @@ Artisan::command('inspire', function () {
 
 Schedule::command('attendance:aggregate')
     ->mondays()
-    ->dailyAt('23:00')
+    ->dailyAt('21:00')
     ->timezone('Asia/Jakarta');
 
 Schedule::command('attendance:aggregate')
     ->thursdays()
-    ->dailyAt('23:00')
+    ->dailyAt('21:00')
     ->timezone('Asia/Jakarta');
 
 Schedule::command('attendance:aggregate')
     ->fridays()
-    ->dailyAt('23:00')
+    ->dailyAt('21:00')
     ->timezone('Asia/Jakarta');
 
 Schedule::command('attendance:send-recap')
     ->mondays()
-    ->dailyAt('23:15')
+    ->dailyAt('21:15')
     ->timezone('Asia/Jakarta');
 
 Schedule::command('attendance:send-recap')
     ->thursdays()
-    ->dailyAt('23:15')
+    ->dailyAt('21:15')
     ->timezone('Asia/Jakarta');
 
 Schedule::command('attendance:send-recap')
     ->fridays()
-    ->dailyAt('23:15')
+    ->dailyAt('21:15')
     ->timezone('Asia/Jakarta');
 
 // Schedule::command('wa:send-personal')
@@ -59,17 +59,17 @@ Schedule::command('attendance:send-monthly-absent-recap')
 
 Schedule::command('attendance:send-fingerprint-reminder')
     ->mondays()
-    ->dailyAt('21:15')
+    ->dailyAt('19:30')
     ->timezone('Asia/Jakarta');
 
 Schedule::command('attendance:send-fingerprint-reminder')
     ->thursdays()
-    ->dailyAt('21:15')
+    ->dailyAt('19:30')
     ->timezone('Asia/Jakarta');
 
 Schedule::command('attendance:send-fingerprint-reminder')
     ->fridays()
-    ->dailyAt('21:15')
+    ->dailyAt('19.30:15')
     ->timezone('Asia/Jakarta');
 
 
