@@ -61,7 +61,7 @@ class KehadiranController extends Controller
         ]);
 
         $tanggal = \Carbon\Carbon::parse($validated['tanggal'], 'Asia/Jakarta')
-            ->setTime(19, 45, 0);
+            ->setTime(17, 50, 0);
 
         $waktu = $tanggal;
 
