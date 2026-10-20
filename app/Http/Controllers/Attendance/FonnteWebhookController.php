@@ -51,7 +51,19 @@ class FonnteWebhookController extends Controller
             ]);
         }
 
-        $today      = Carbon::now('Asia/Jakarta');
+        // 4. Batasi waktu penerimaan balasan hanya antara jam 19:30:00 s/d sebelum 21:00:00 WIB
+        $today       = Carbon::now('Asia/Jakarta');
+        $windowStart = $today->copy()->setTime(19, 30, 0);
+        $windowEnd   = $today->copy()->setTime(21, 0, 0);
+
+        if ($today->lessThan($windowStart) || $today->greaterThanOrEqualTo($windowEnd)) {
+            return response()->json([
+                'ok'      => true,
+                'ignored' => true,
+                'reason'  => 'outside_allowed_time_window_1930_to_2100',
+            ]);
+        }
+
         $dateStr    = $today->toDateString();
         $waktuHadir = $today->copy()->setTime(17, 50, 0);
 

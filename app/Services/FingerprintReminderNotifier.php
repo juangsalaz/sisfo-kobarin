@@ -151,7 +151,7 @@ class FingerprintReminderNotifier
         }
 
         $lines[] = "";
-        $lines[] = "💡 *Cara Input via WA:*";
+        $lines[] = "💡 *Cara Input via WA (19.30 - 21.00 WIB):*";
         $lines[] = "Copy-paste daftar di atas, lalu tambahkan tanda di samping nama:";
         $lines[] = "• ✅ = Hadir";
         $lines[] = "• 🙏 = Izin";
